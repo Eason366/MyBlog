@@ -1,6 +1,8 @@
 package com.eason.blog.controller;
 
 
+import com.eason.blog.req.BlogReq;
+import com.eason.blog.resp.BlogResp;
 import com.eason.blog.resp.CommonResp;
 import com.eason.blog.service.BlogService;
 import com.eason.blog.domain.Blog;
@@ -19,9 +21,9 @@ public class BlogController {
     private BlogService blogService;
 
     @GetMapping("/list")
-    public CommonResp list() {
-        CommonResp<List<Blog>> resp = new CommonResp<>();
-        List<Blog> list =  blogService.list();
+    public CommonResp list(BlogReq req) {
+        CommonResp<List<BlogResp>> resp = new CommonResp<>();
+        List<BlogResp> list =  blogService.list(req);
         resp.setContent(list);
         return resp;
     }
