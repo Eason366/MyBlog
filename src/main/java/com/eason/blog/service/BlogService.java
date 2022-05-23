@@ -1,4 +1,4 @@
-package com.eason.blog.Service;
+package com.eason.blog.service;
 
 import com.eason.blog.domain.Blog;
 import com.eason.blog.mapper.BlogMapper;

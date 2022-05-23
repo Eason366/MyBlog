@@ -1,7 +1,8 @@
 package com.eason.blog.controller;
 
 
-import com.eason.blog.Service.BlogService;
+import com.eason.blog.resp.CommonResp;
+import com.eason.blog.service.BlogService;
 import com.eason.blog.domain.Blog;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,11 @@ public class BlogController {
     private BlogService blogService;
 
     @GetMapping("/list")
-    public List<Blog> list() {
-        return blogService.list();
+    public CommonResp list() {
+        CommonResp<List<Blog>> resp = new CommonResp<>();
+        List<Blog> list =  blogService.list();
+        resp.setContent(list);
+        return resp;
     }
 
 }
