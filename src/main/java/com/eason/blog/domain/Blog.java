@@ -9,6 +9,8 @@ public class Blog {
 
     private Long category2Id;
 
+    private String description;
+
     private String cover;
 
     private Integer viewCount;
@@ -45,6 +47,14 @@ public class Blog {
         this.category2Id = category2Id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getCover() {
         return cover;
     }
@@ -71,6 +81,7 @@ public class Blog {
         sb.append(", name=").append(name);
         sb.append(", category1Id=").append(category1Id);
         sb.append(", category2Id=").append(category2Id);
+        sb.append(", description=").append(description);
         sb.append(", cover=").append(cover);
         sb.append(", viewCount=").append(viewCount);
         sb.append("]");

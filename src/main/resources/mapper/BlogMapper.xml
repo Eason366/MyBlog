@@ -6,6 +6,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="category1_id" jdbcType="BIGINT" property="category1Id" />
     <result column="category2_id" jdbcType="BIGINT" property="category2Id" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="cover" jdbcType="VARCHAR" property="cover" />
     <result column="view_count" jdbcType="INTEGER" property="viewCount" />
   </resultMap>
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`, category1_id, category2_id, cover, view_count
+    id, `name`, category1_id, category2_id, description, cover, view_count
   </sql>
   <select id="selectByExample" parameterType="com.eason.blog.domain.BlogExample" resultMap="BaseResultMap">
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.eason.blog.domain.Blog">
     insert into blog (id, `name`, category1_id, 
-      category2_id, cover, view_count
-      )
+      category2_id, description, cover, 
+      view_count)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{category1Id,jdbcType=BIGINT}, 
-      #{category2Id,jdbcType=BIGINT}, #{cover,jdbcType=VARCHAR}, #{viewCount,jdbcType=INTEGER}
-      )
+      #{category2Id,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, 
+      #{viewCount,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.eason.blog.domain.Blog">
     insert into blog
@@ -122,6 +123,9 @@
       </if>
       <if test="category2Id != null">
         category2_id,
+      </if>
+      <if test="description != null">
+        description,
       </if>
       <if test="cover != null">
         cover,
@@ -142,6 +146,9 @@
       </if>
       <if test="category2Id != null">
         #{category2Id,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
       </if>
       <if test="cover != null">
         #{cover,jdbcType=VARCHAR},
@@ -172,6 +179,9 @@
       <if test="record.category2Id != null">
         category2_id = #{record.category2Id,jdbcType=BIGINT},
       </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
       <if test="record.cover != null">
         cover = #{record.cover,jdbcType=VARCHAR},
       </if>
@@ -189,6 +199,7 @@
       `name` = #{record.name,jdbcType=VARCHAR},
       category1_id = #{record.category1Id,jdbcType=BIGINT},
       category2_id = #{record.category2Id,jdbcType=BIGINT},
+      description = #{record.description,jdbcType=VARCHAR},
       cover = #{record.cover,jdbcType=VARCHAR},
       view_count = #{record.viewCount,jdbcType=INTEGER}
     <if test="_parameter != null">
@@ -207,6 +218,9 @@
       <if test="category2Id != null">
         category2_id = #{category2Id,jdbcType=BIGINT},
       </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
       <if test="cover != null">
         cover = #{cover,jdbcType=VARCHAR},
       </if>
@@ -221,6 +235,7 @@
     set `name` = #{name,jdbcType=VARCHAR},
       category1_id = #{category1Id,jdbcType=BIGINT},
       category2_id = #{category2Id,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR},
       cover = #{cover,jdbcType=VARCHAR},
       view_count = #{viewCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}

@@ -86,6 +86,7 @@
 <script lang="ts">
 import { UserOutlined, LaptopOutlined, NotificationOutlined,StarOutlined, LikeOutlined, MessageOutlined  } from '@ant-design/icons-vue';
 import { defineComponent, ref } from 'vue';
+import axios from 'axios';
 const listData: Record<string, string>[] = [];
 
 for (let i = 0; i < 8; i++) {
@@ -110,6 +111,12 @@ export default defineComponent({
     MessageOutlined,
   },
   setup() {
+
+    console.log("setup");
+    axios.get("http://127.0.0.1:8880/blog/list?name=Spring").then((response) => {
+      console.log(response);
+    })
+
     const pagination = {
       onChange: (page: number) => {
         console.log(page);

@@ -4,6 +4,7 @@ create table `blog` (
   `name` varchar(50) comment 'name',
   `category1_id` bigint comment 'category1_id',
   `category2_id` bigint comment 'category2_id',
+  `description` varchar(200) comment 'description',
   `cover` varchar(200) comment 'cover',
   `view_count` int not null default 0 comment 'view_count',
   primary key (`id`)
