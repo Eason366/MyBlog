@@ -11,7 +11,7 @@
         <a-sub-menu key="sub1">
           <template #title>
                 <span>
-                  <user-outlined />
+                  <appstore-outlined />
                   subnav 1
                 </span>
           </template>
@@ -23,7 +23,7 @@
         <a-sub-menu key="sub2">
           <template #title>
                 <span>
-                  <laptop-outlined />
+                  <appstore-outlined />
                   subnav 2
                 </span>
           </template>
@@ -35,7 +35,7 @@
         <a-sub-menu key="sub3">
           <template #title>
                 <span>
-                  <notification-outlined />
+                  <appstore-outlined />
                   subnav 3
                 </span>
           </template>
@@ -49,28 +49,27 @@
     <a-layout-content :style="{ minHeight: '780px', margin: '24px 16px 0', overflow: 'initial' }">
 
       <a-list item-layout="vertical" size="large" :pagination="pagination"
-              :data-source="listData"
+              :data-source="blogs"
               :style="{margin: '24px 240px'}">
         <template #renderItem="{ item }">
-          <a-list-item key="item.title">
+          <a-list-item key="item.name">
             <template #actions>
-          <span v-for="{ type, text } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px" />
-            {{ text }}
+          <span >
+            <component :is= EyeOutlined style="margin-right: 8px" />
+            {{ item.viewCount}}
           </span>
             </template>
             <template #extra>
               <img
-                  width="272"
+                  width="350"
                   alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                  :src= "item.cover"
               />
             </template>
             <a-list-item-meta :description="item.description">
               <template #title>
-                <a :href="item.href">{{ item.title }}</a>
+                <a :href="item.href" class="title">{{ item.name }}</a>
               </template>
-              <template #avatar><a-avatar :src="item.avatar" /></template>
             </a-list-item-meta>
             {{ item.content }}
           </a-list-item>
@@ -84,38 +83,28 @@
 
 
 <script lang="ts">
-import { UserOutlined, LaptopOutlined, NotificationOutlined,StarOutlined, LikeOutlined, MessageOutlined  } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import { AppstoreOutlined,EyeOutlined} from '@ant-design/icons-vue';
+import { defineComponent, ref ,onMounted} from 'vue';
 import axios from 'axios';
-const listData: Record<string, string>[] = [];
 
-for (let i = 0; i < 8; i++) {
-  listData.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://joeschmoe.io/api/v1/random',
-    description:
-        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
 export default defineComponent({
   name: 'Home',
   components: {
-    UserOutlined,
-    LaptopOutlined,
-    NotificationOutlined,
-    StarOutlined,
-    LikeOutlined,
-    MessageOutlined,
+    AppstoreOutlined,
+    EyeOutlined,
   },
   setup() {
-
     console.log("setup");
-    axios.get("http://127.0.0.1:8880/blog/list?name=Spring").then((response) => {
-      console.log(response);
-    })
+    const blogs = ref()
+
+
+    onMounted(()=>{
+      axios.get("http://127.0.0.1:8880/blog/list?name=Spring").then((response) => {
+        console.log(response);
+        const data = response.data;
+        blogs.value = data.content
+      });
+    });
 
     const pagination = {
       onChange: (page: number) => {
@@ -123,19 +112,21 @@ export default defineComponent({
       },
       pageSize: 10,
     };
-    const actions: Record<string, string>[] = [
-      { type: 'StarOutlined', text: '156' },
-      { type: 'LikeOutlined', text: '156' },
-      { type: 'MessageOutlined', text: '2' },
-    ];
+
     return {
       selectedKeys1: ref<string[]>(['2']),
       selectedKeys2: ref<string[]>(['1']),
       openKeys: ref<string[]>(['sub1']),
-      listData,
+      EyeOutlined,
       pagination,
-      actions,
+      blogs,
     };
   },
 });
 </script>
+
+<style>
+.title {
+  font-size: 24px;
+}
+</style>
