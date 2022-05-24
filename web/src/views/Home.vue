@@ -99,7 +99,7 @@ export default defineComponent({
 
 
     onMounted(()=>{
-      axios.get(process.env.VUE_APP_API_HOST +"/blog/list").then((response) => {
+      axios.get( "/blog/list").then((response) => {
         console.log(response);
         const data = response.data;
         blogs.value = data.content
