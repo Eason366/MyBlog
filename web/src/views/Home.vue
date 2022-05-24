@@ -99,7 +99,7 @@ export default defineComponent({
 
 
     onMounted(()=>{
-      axios.get("http://127.0.0.1:8880/blog/list?name=Spring").then((response) => {
+      axios.get("http://127.0.0.1:8880/blog/list").then((response) => {
         console.log(response);
         const data = response.data;
         blogs.value = data.content

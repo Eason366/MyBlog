@@ -6,7 +6,9 @@ import com.eason.blog.mapper.BlogMapper;
 import com.eason.blog.req.BlogReq;
 import com.eason.blog.resp.BlogResp;
 import com.eason.blog.util.CopyUtil;
+import com.mysql.cj.util.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,7 +23,10 @@ public class BlogService {
     public List<BlogResp> list(BlogReq req){
         BlogExample blogExample = new BlogExample();
         BlogExample.Criteria criteria = blogExample.createCriteria();
-        criteria.andNameLike("%"+req.getName()+"%");
+
+        if (!ObjectUtils.isEmpty(req.getName())){
+            criteria.andNameLike("%"+req.getName()+"%");
+        }
         List<Blog> blogsList = blogMapper.selectByExample(blogExample);
 
         List<BlogResp> list = CopyUtil.copyList(blogsList, BlogResp.class);
