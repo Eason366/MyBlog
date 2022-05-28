@@ -5,9 +5,13 @@ public class BlogQueryReq extends PageReq{
 
     private String name;
 
-    private Long category;
+    private Long category1Id;
+
+    private Long category2Id;
 
     private String description;
+
+    private String cover;
 
     private Integer viewCount;
 
@@ -29,12 +33,20 @@ public class BlogQueryReq extends PageReq{
         this.name = name;
     }
 
-    public Long getCategory() {
-        return category;
+    public Long getCategory1Id() {
+        return category1Id;
     }
 
-    public void setCategory(Long category) {
-        this.category = category;
+    public void setCategory1Id(Long category1Id) {
+        this.category1Id = category1Id;
+    }
+
+    public Long getCategory2Id() {
+        return category2Id;
+    }
+
+    public void setCategory2Id(Long category2Id) {
+        this.category2Id = category2Id;
     }
 
     public String getDescription() {
@@ -43,6 +55,14 @@ public class BlogQueryReq extends PageReq{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public Integer getViewCount() {
@@ -69,8 +89,10 @@ public class BlogQueryReq extends PageReq{
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
-        sb.append(", category=").append(category);
+        sb.append(", category1Id=").append(category1Id);
+        sb.append(", category2Id=").append(category2Id);
         sb.append(", description=").append(description);
+        sb.append(", cover=").append(cover);
         sb.append(", viewCount=").append(viewCount);
         sb.append(", voteCount=").append(voteCount);
         sb.append("]");

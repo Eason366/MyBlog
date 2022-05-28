@@ -66,8 +66,16 @@
 
           <a-row :gutter="16">
             <a-col :span="24">
-              <a-form-item label="Category">
-                <a-input v-model:value="record_blog.category" placeholder="Please enter blog Category"/>
+              <a-form-item label="Category 1">
+                <a-input v-model:value="record_blog.category1Id" placeholder="Please enter blog First Category"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Category 2">
+                <a-input v-model:value="record_blog.category2Id" placeholder="Please enter blog Second Category"/>
               </a-form-item>
             </a-col>
           </a-row>
@@ -130,9 +138,14 @@ export default defineComponent({
         slots: { customRender: 'cover' }
       },
       {
-        title: 'Category',
+        title: 'Category 1',
         key: 'category',
-        dataIndex: 'category'
+        dataIndex: 'category1Id'
+      },
+      {
+        title: 'Category 2',
+        key: 'category',
+        dataIndex: 'category2Id'
       },
       {
         title: 'View Count',

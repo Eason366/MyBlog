@@ -61,8 +61,8 @@ public class BlogService {
         if (ObjectUtils.isEmpty(req.getId())){
             // insert
             blog.setId(snowFlake.nextId());
-            blog.setViewCount(0);
             blog.setVoteCount(0);
+            blog.setViewCount(0);
             if (ObjectUtils.isEmpty(req.getCover())) blog.setCover("https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png");
             blogMapper.insert(blog);
         }else {
