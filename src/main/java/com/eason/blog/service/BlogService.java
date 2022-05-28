@@ -72,4 +72,8 @@ public class BlogService {
 
     }
 
+    public void delete(Long id){
+        blogMapper.deleteByPrimaryKey(id);
+    }
+
 }

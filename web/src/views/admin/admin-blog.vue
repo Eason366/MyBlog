@@ -23,9 +23,19 @@
             <a-button type="primary" @click="edit(record)">
               Edit
             </a-button>
-            <a-button type="primary" danger>
-              Delete
-            </a-button>
+
+            <a-popconfirm
+                title="Are you sure delete this Blog?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="onDelete(record.id)"
+            >
+              <a-button type="primary" danger>
+                Delete
+              </a-button>
+            </a-popconfirm>
+
+
           </a-space>
         </template>
       </a-table>
@@ -101,6 +111,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
+import { message } from 'ant-design-vue';
 import axios from 'axios';
 
 export default defineComponent({
@@ -153,6 +164,20 @@ export default defineComponent({
       pageSize: pageSize,
       total: 0
     });
+
+    const onDelete = (id:number) => {
+      axios.delete("/blog/delete/"+id ).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          message.success('Blog Deleted Successfully');
+          // reload
+          blogQuery({
+            page:pagination.value.current,
+            size:pagination.value.pageSize,
+          })
+        }
+      });
+    };
 
 
     //========================  Drawer  ========================
@@ -228,6 +253,7 @@ export default defineComponent({
       edit_visible,
       edit,
       add,
+      onDelete,
       edit_onClose,
       edit_Submit,
       record_blog,
