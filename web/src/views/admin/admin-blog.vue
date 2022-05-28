@@ -2,8 +2,14 @@
   <a-layout>
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
-        style="padding: 64px 100px"
+        style="padding: 78px 100px"
     >
+
+      <p>
+        <a-button type="primary" @click="add" size="large">
+          Add Blog
+        </a-button>
+      </p>
 
       <a-table
           :columns="columns"
@@ -35,7 +41,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
           <a-form-item label="Name">
-            <a-input v-model:value="record_blog.name" />
+            <a-input v-model:value="record_blog.name" placeholder="Please enter blog Name"/>
           </a-form-item>
             </a-col>
           </a-row>
@@ -43,7 +49,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Cover">
-                <a-input v-model:value="record_blog.cover" />
+                <a-input v-model:value="record_blog.cover" placeholder="Please enter blog Cover Url"/>
               </a-form-item>
             </a-col>
           </a-row>
@@ -51,7 +57,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Category">
-                <a-input v-model:value="record_blog.category" />
+                <a-input v-model:value="record_blog.category" placeholder="Please enter blog Category"/>
               </a-form-item>
             </a-col>
           </a-row>
@@ -62,7 +68,7 @@
                 <a-textarea
                     v-model:value="record_blog.description"
                     :rows="4"
-                    placeholder="please enter blog description"
+                    placeholder="Please enter blog Description"
                 />
               </a-form-item>
             </a-col>
@@ -155,7 +161,11 @@ export default defineComponent({
     const edit = (record:JSON) => {
       edit_visible.value = true;
       record_blog.value = record
-      console.log(record)
+    };
+
+    const add = () => {
+      edit_visible.value = true;
+      record_blog.value = {};
     };
 
     const edit_onClose = () => {
@@ -205,7 +215,7 @@ export default defineComponent({
 
     onMounted(() => {
       blogQuery({
-        page:1,
+        page:pagination.value.current,
         size:pagination.value.pageSize,
       })
     });
@@ -217,6 +227,7 @@ export default defineComponent({
       loading,
       edit_visible,
       edit,
+      add,
       edit_onClose,
       edit_Submit,
       record_blog,

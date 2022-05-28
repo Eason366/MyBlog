@@ -61,8 +61,8 @@
             </template>
             <template #extra>
               <img
-                  width="350"
-                  alt="logo"
+                  :width="350"
+                  :height="220"
                   :src= "item.cover"
               />
             </template>
@@ -130,7 +130,7 @@ export default defineComponent({
 
     onMounted(()=>{
       blogQuery({
-        page:1,
+        page:pagination.value.current,
         size:pageSize,
       })
     });

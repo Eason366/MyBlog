@@ -8,6 +8,7 @@ import com.eason.blog.req.BlogSaveReq;
 import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
+import com.eason.blog.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class BlogService {
 
     @Resource
     private BlogMapper blogMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<BlogQueryResp> list(BlogQueryReq req){
         BlogExample blogExample = new BlogExample();
@@ -56,6 +60,10 @@ public class BlogService {
         Blog blog = CopyUtil.copy(req,Blog.class);
         if (ObjectUtils.isEmpty(req.getId())){
             // insert
+            blog.setId(snowFlake.nextId());
+            blog.setViewCount(0);
+            blog.setVoteCount(0);
+            if (ObjectUtils.isEmpty(req.getCover())) blog.setCover("https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png");
             blogMapper.insert(blog);
         }else {
             //update
