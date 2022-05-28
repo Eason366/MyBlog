@@ -7,10 +7,10 @@ import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.CommonResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.service.BlogService;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/blog")
@@ -20,7 +20,7 @@ public class BlogController {
     private BlogService blogService;
 
     @GetMapping("/list")
-    public CommonResp list(BlogQueryReq req) {
+    public CommonResp list(@Valid BlogQueryReq req) {
         CommonResp<PageResp<BlogQueryResp>> resp = new CommonResp<>();
         PageResp<BlogQueryResp> list =  blogService.list(req);
         resp.setContent(list);
@@ -28,7 +28,7 @@ public class BlogController {
     }
 
     @PostMapping("/save")
-    public CommonResp save(@RequestBody BlogSaveReq req) {
+    public CommonResp save(@RequestBody @Valid BlogSaveReq req) {
         CommonResp resp = new CommonResp<>();
         blogService.save(req);
         return resp;

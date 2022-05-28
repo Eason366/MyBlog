@@ -47,10 +47,10 @@
           @close="edit_onClose"
       >
 
-        <a-form :model="record_blog" layout="vertical">
+        <a-form :model="record_blog" layout="vertical" :rules="rules">
           <a-row :gutter="16">
             <a-col :span="24">
-          <a-form-item label="Name">
+          <a-form-item label="Name" name="Name">
             <a-input v-model:value="record_blog.name" placeholder="Please enter blog Name"/>
           </a-form-item>
             </a-col>
@@ -188,6 +188,8 @@ export default defineComponent({
             page:pagination.value.current,
             size:pagination.value.pageSize,
           })
+        }else {
+          message.error(data.message)
         }
       });
     };
@@ -196,6 +198,11 @@ export default defineComponent({
     //========================  Drawer  ========================
     const edit_visible = ref<boolean>(false);
     const record_blog = ref({});
+
+    const rules = {
+      Name:[{required: true,message: 'Please Enter blog Name', trigger: 'blur' }]
+    }
+
     const edit = (record:JSON) => {
       edit_visible.value = true;
       record_blog.value = record
@@ -225,6 +232,8 @@ export default defineComponent({
             page:pagination.value.current,
             size:pagination.value.pageSize,
           })
+        }else {
+          message.error(data.message)
         }
       });
     };
@@ -239,13 +248,18 @@ export default defineComponent({
           size: params.size
         }
       }).then((response) => {
-        loading.value = false;
-        const data = response.data;
-        blogs.value = data.content.list;
 
-        // reload pagination
-        pagination.value.current = params.page;
-        pagination.value.total = data.content.total;
+        const data = response.data;
+        if (data.success){
+          blogs.value = data.content.list;
+          loading.value = false;
+          // reload pagination
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+        } else {
+          message.error(data.message)
+        }
+
       });
     };
 
@@ -266,6 +280,7 @@ export default defineComponent({
       edit_visible,
       edit,
       add,
+      rules,
       onDelete,
       edit_onClose,
       edit_Submit,

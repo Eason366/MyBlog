@@ -1,8 +1,11 @@
 package com.eason.blog.req;
 
+import javax.validation.constraints.NotNull;
+
 public class BlogSaveReq {
     private Long id;
 
+    @NotNull(message = "Blog Name not be null")
     private String name;
 
     private Long category1Id;

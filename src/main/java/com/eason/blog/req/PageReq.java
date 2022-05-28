@@ -1,8 +1,14 @@
 package com.eason.blog.req;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotNull;
+
 public class PageReq {
+    @NotNull(message = "Page not be null")
     private int page;
 
+    @NotNull(message = "Page size not be null")
+    @Max(value = 10, message = "Every page no more than 10 data")
     private int size;
 
     public int getPage() {
