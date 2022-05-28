@@ -4,6 +4,7 @@ package com.eason.blog.controller;
 import com.eason.blog.req.BlogReq;
 import com.eason.blog.resp.BlogResp;
 import com.eason.blog.resp.CommonResp;
+import com.eason.blog.resp.PageResp;
 import com.eason.blog.service.BlogService;
 import com.eason.blog.domain.Blog;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +23,8 @@ public class BlogController {
 
     @GetMapping("/list")
     public CommonResp list(BlogReq req) {
-        CommonResp<List<BlogResp>> resp = new CommonResp<>();
-        List<BlogResp> list =  blogService.list(req);
+        CommonResp<PageResp<BlogResp>> resp = new CommonResp<>();
+        PageResp<BlogResp> list =  blogService.list(req);
         resp.setContent(list);
         return resp;
     }

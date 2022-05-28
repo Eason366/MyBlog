@@ -36,17 +36,6 @@ import axios from 'axios';
 export default defineComponent({
   name: 'AdminEbook',
   setup() {
-    const blogs = ref();
-
-
-    const pagination = {
-      onChange: (page: number) => {
-        console.log(page);
-      },
-      pageSize: 10,
-    };
-
-
     const loading = ref(false);
 
     const columns = [
@@ -79,16 +68,47 @@ export default defineComponent({
       }
     ];
 
+    const blogs = ref();
+    const pageSize = 10;
+
+
+    const pagination = ref({
+      onChange: (page: number) => {
+        blogQuery({
+          page:page,
+          size:pageSize,
+        })
+      },
+      current: 1,
+      pageSize: pageSize,
+      total: 0
+    });
+
+    const blogQuery = (params: { page:number,size:number }) => {
+      loading.value = true;
+      axios.get("/blog/list", {
+        params: {
+          page: params.page,
+          size: params.size
+        }
+      }).then((response) => {
+        loading.value = false;
+        const data = response.data;
+        blogs.value = data.content.list;
+
+        // 重置分页按钮
+        pagination.value.current = params.page;
+        pagination.value.total = data.content.total;
+      });
+    };
 
 
 
     onMounted(() => {
-      loading.value = true;
-      axios.get("/blog/list").then((response) => {
-        loading.value = false;
-        const data = response.data;
-        blogs.value = data.content;
-      });
+      blogQuery({
+        page:1,
+        size:pagination.value.pageSize,
+      })
     });
 
     return {
@@ -96,15 +116,8 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-
     }
   }
 });
 </script>
 
-<style scoped>
-img {
-  width: 50px;
-  height: 50px;
-}
-</style>

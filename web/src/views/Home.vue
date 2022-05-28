@@ -96,21 +96,44 @@ export default defineComponent({
   setup() {
     console.log("setup");
     const blogs = ref()
+    const pageSize = 10
+
+
+    const pagination = ref({
+      onChange: (page: number) => {
+        blogQuery({
+          page:page,
+          size:pageSize,
+        })
+      },
+      current: 1,
+      pageSize:pageSize,
+      total: 0
+    });
+
+    const blogQuery = (params: { page:number,size:number }) => {
+      axios.get("/blog/list", {
+        params: {
+          page: params.page,
+          size: params.size
+        }
+      }).then((response) => {
+        const data = response.data;
+        blogs.value = data.content.list;
+
+        // 重置分页按钮
+        pagination.value.current = params.page;
+        pagination.value.total = data.content.total;
+      });
+    };
 
 
     onMounted(()=>{
-      axios.get( "/blog/list").then((response) => {
-        const data = response.data;
-        blogs.value = data.content
-      });
+      blogQuery({
+        page:1,
+        size:pageSize,
+      })
     });
-
-    const pagination = {
-      onChange: (page: number) => {
-        console.log(page);
-      },
-      pageSize: 10,
-    };
 
     return {
       selectedKeys1: ref<string[]>(['2']),
@@ -119,6 +142,7 @@ export default defineComponent({
       EyeOutlined,
       pagination,
       blogs,
+
     };
   },
 });
