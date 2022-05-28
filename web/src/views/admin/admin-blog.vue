@@ -40,7 +40,7 @@ export default defineComponent({
     const blogs = ref();
     const pagination = ref({
       current: 1,
-      pageSize: 5,
+      pageSize: 2,
       total: 0
     });
     const loading = ref(false);
@@ -57,12 +57,16 @@ export default defineComponent({
       },
       {
         title: '分类',
-        key: 'category1Id',
-        dataIndex: 'category1Id'
+        key: 'category',
+        dataIndex: 'category'
       },
       {
         title: '阅读数',
         dataIndex: 'viewCount'
+      },
+      {
+        title: '点赞数',
+        dataIndex: 'voteCount'
       },
       {
         title: 'Action',

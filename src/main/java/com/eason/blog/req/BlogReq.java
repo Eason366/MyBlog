@@ -5,12 +5,13 @@ public class BlogReq {
 
     private String name;
 
-    private Long category1Id;
-
-    private Long category2Id;
+    private Long category;
 
     private String description;
 
+    private Integer viewCount;
+
+    private Integer voteCount;
 
     public Long getId() {
         return id;
@@ -28,20 +29,12 @@ public class BlogReq {
         this.name = name;
     }
 
-    public Long getCategory1Id() {
-        return category1Id;
+    public Long getCategory() {
+        return category;
     }
 
-    public void setCategory1Id(Long category1Id) {
-        this.category1Id = category1Id;
-    }
-
-    public Long getCategory2Id() {
-        return category2Id;
-    }
-
-    public void setCategory2Id(Long category2Id) {
-        this.category2Id = category2Id;
+    public void setCategory(Long category) {
+        this.category = category;
     }
 
     public String getDescription() {
@@ -52,6 +45,21 @@ public class BlogReq {
         this.description = description;
     }
 
+    public Integer getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Integer viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public Integer getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
 
     @Override
     public String toString() {
@@ -61,9 +69,10 @@ public class BlogReq {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
-        sb.append(", category1Id=").append(category1Id);
-        sb.append(", category2Id=").append(category2Id);
+        sb.append(", category=").append(category);
         sb.append(", description=").append(description);
+        sb.append(", viewCount=").append(viewCount);
+        sb.append(", voteCount=").append(voteCount);
         sb.append("]");
         return sb.toString();
     }
