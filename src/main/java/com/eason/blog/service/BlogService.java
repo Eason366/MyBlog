@@ -5,7 +5,7 @@ import com.eason.blog.domain.BlogExample;
 import com.eason.blog.mapper.BlogMapper;
 import com.eason.blog.req.BlogQueryReq;
 import com.eason.blog.req.BlogSaveReq;
-import com.eason.blog.resp.BlogResp;
+import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
@@ -26,7 +26,7 @@ public class BlogService {
     @Resource
     private BlogMapper blogMapper;
 
-    public PageResp<BlogResp> list(BlogQueryReq req){
+    public PageResp<BlogQueryResp> list(BlogQueryReq req){
         BlogExample blogExample = new BlogExample();
         BlogExample.Criteria criteria = blogExample.createCriteria();
 
@@ -42,9 +42,9 @@ public class BlogService {
         LOG.info("总行数：{}", pageInfo.getTotal());
         LOG.info("总页数：{}", pageInfo.getPages());
 
-        List<BlogResp> list = CopyUtil.copyList(blogsList, BlogResp.class);
+        List<BlogQueryResp> list = CopyUtil.copyList(blogsList, BlogQueryResp.class);
 
-        PageResp<BlogResp> pageResp = new PageResp();
+        PageResp<BlogQueryResp> pageResp = new PageResp();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;

@@ -1,6 +1,6 @@
 package com.eason.blog.resp;
 
-public class BlogResp {
+public class BlogQueryResp {
     private Long id;
 
     private String name;

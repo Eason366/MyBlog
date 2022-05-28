@@ -3,7 +3,7 @@ package com.eason.blog.controller;
 
 import com.eason.blog.req.BlogQueryReq;
 import com.eason.blog.req.BlogSaveReq;
-import com.eason.blog.resp.BlogResp;
+import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.CommonResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.service.BlogService;
@@ -20,8 +20,8 @@ public class BlogController {
 
     @GetMapping("/list")
     public CommonResp list(BlogQueryReq req) {
-        CommonResp<PageResp<BlogResp>> resp = new CommonResp<>();
-        PageResp<BlogResp> list =  blogService.list(req);
+        CommonResp<PageResp<BlogQueryResp>> resp = new CommonResp<>();
+        PageResp<BlogQueryResp> list =  blogService.list(req);
         resp.setContent(list);
         return resp;
     }
