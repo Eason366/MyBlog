@@ -16,4 +16,14 @@ insert into `blog` (id, name) values (2, 'Vue 入门教程');
 insert into `blog` (id, name) values (3, 'Python 入门教程');
 insert into `blog` (id, name) values (4, 'Mysql 入门教程');
 insert into `blog` (id, name) values (5, 'Oracle 入门教程');
+insert into `blog` (id, name) values (11, 'Spring Boot 入门教程');
+insert into `blog` (id, name) values (22, 'Vue 入门教程');
+insert into `blog` (id, name) values (32, 'Python 入门教程');
+insert into `blog` (id, name) values (42, 'Mysql 入门教程');
+insert into `blog` (id, name) values (53, 'Oracle 入门教程');
+insert into `blog` (id, name) values (14, 'Spring Boot 入门教程');
+insert into `blog` (id, name) values (25, 'Vue 入门教程');
+insert into `blog` (id, name) values (36, 'Python 入门教程');
+insert into `blog` (id, name) values (47, 'Mysql 入门教程');
+insert into `blog` (id, name) values (51, 'Oracle 入门教程');
 

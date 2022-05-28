@@ -10,7 +10,6 @@
           :data-source="blogs"
           :pagination="pagination"
           :loading="loading"
-          @change="handleTableChange"
           style="padding: 64px 100px"
       >
         <template v-slot:action="{ text, record }">
@@ -38,11 +37,16 @@ export default defineComponent({
   name: 'AdminEbook',
   setup() {
     const blogs = ref();
-    const pagination = ref({
-      current: 1,
-      pageSize: 2,
-      total: 0
-    });
+
+
+    const pagination = {
+      onChange: (page: number) => {
+        console.log(page);
+      },
+      pageSize: 10,
+    };
+
+
     const loading = ref(false);
 
     const columns = [
@@ -75,36 +79,16 @@ export default defineComponent({
       }
     ];
 
-    /**
-     * 数据查询
-     **/
-    const handleQuery = (params: {page:number,size:number}) => {
+
+
+
+    onMounted(() => {
       loading.value = true;
       axios.get("/blog/list").then((response) => {
         loading.value = false;
         const data = response.data;
         blogs.value = data.content;
-
-        // 重置分页按钮
-        pagination.value.current = params.page;
       });
-    };
-
-    /**
-     * 表格点击页码时触发
-     */
-    const handleTableChange = (pagination:{current:number,pageSize:number}) => {
-      handleQuery({
-        page: pagination.current,
-        size: pagination.pageSize
-      });
-      console.log(pagination.current)
-      console.log(pagination.pageSize)
-    };
-
-    onMounted(() => {
-      handleQuery({page:pagination.value.current,
-                          size:pagination.value.pageSize});
     });
 
     return {
@@ -112,7 +96,7 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-      handleTableChange
+
     }
   }
 });
