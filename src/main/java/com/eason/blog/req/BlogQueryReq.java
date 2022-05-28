@@ -1,6 +1,6 @@
 package com.eason.blog.req;
 
-public class BlogReq extends PageReq{
+public class BlogQueryReq extends PageReq{
     private Long id;
 
     private String name;

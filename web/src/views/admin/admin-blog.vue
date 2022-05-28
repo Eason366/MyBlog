@@ -2,6 +2,7 @@
   <a-layout>
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
+        style="padding: 64px 100px"
     >
 
       <a-table
@@ -10,19 +11,82 @@
           :data-source="blogs"
           :pagination="pagination"
           :loading="loading"
-          style="padding: 64px 100px"
       >
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-            <a-button type="primary">
-              编辑
+            <a-button type="primary" @click="edit(record)">
+              Edit
             </a-button>
             <a-button type="primary" danger>
-              删除
+              Delete
             </a-button>
           </a-space>
         </template>
       </a-table>
+      <a-drawer
+          :width="500"
+          title="Basic Drawer"
+          placement="left"
+          :visible="edit_visible"
+          @close="edit_onClose"
+      >
+
+        <a-form :model="record_blog" layout="vertical">
+          <a-row :gutter="16">
+            <a-col :span="24">
+          <a-form-item label="Name">
+            <a-input v-model:value="record_blog.name" />
+          </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Cover">
+                <a-input v-model:value="record_blog.cover" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Category">
+                <a-input v-model:value="record_blog.category" />
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Description">
+                <a-textarea
+                    v-model:value="record_blog.description"
+                    :rows="4"
+                    placeholder="please enter blog description"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+
+        </a-form>
+        <div
+            :style="{
+                  position: 'absolute',
+                  right: 0,
+                  bottom: 0,
+                  width: '100%',
+                  borderTop: '1px solid #e9e9e9',
+                  padding: '10px 16px',
+                  background: '#fff',
+                  textAlign: 'right',
+                  zIndex: 1,
+                }"
+        >
+          <a-button style="margin-right: 8px" @click="edit_onClose">Cancel</a-button>
+          <a-button type="primary" @click="edit_Submit">Submit</a-button>
+        </div>
+      </a-drawer>
     </a-layout-content>
   </a-layout>
 </template>
@@ -40,25 +104,25 @@ export default defineComponent({
 
     const columns = [
       {
-        title: '名称',
+        title: 'Name',
         dataIndex: 'name'
       },
       {
-        title: '封面',
+        title: 'Cover',
         dataIndex: 'cover',
         slots: { customRender: 'cover' }
       },
       {
-        title: '分类',
+        title: 'Category',
         key: 'category',
         dataIndex: 'category'
       },
       {
-        title: '阅读数',
+        title: 'View Count',
         dataIndex: 'viewCount'
       },
       {
-        title: '点赞数',
+        title: 'Vote Count',
         dataIndex: 'voteCount'
       },
       {
@@ -84,6 +148,41 @@ export default defineComponent({
       total: 0
     });
 
+
+    //========================  Drawer  ========================
+    const edit_visible = ref<boolean>(false);
+    const record_blog = ref({});
+    const edit = (record:JSON) => {
+      edit_visible.value = true;
+      record_blog.value = record
+      console.log(record)
+    };
+
+    const edit_onClose = () => {
+      edit_visible.value = false;
+      blogQuery({
+        page:pagination.value.current,
+        size:pagination.value.pageSize,
+      })
+    };
+
+    const edit_Submit = () => {
+      axios.post("/blog/save", record_blog.value).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          edit_visible.value = false;
+
+          // reload
+          blogQuery({
+            page:pagination.value.current,
+            size:pagination.value.pageSize,
+          })
+        }
+      });
+    };
+
+
+    //========================  Query ========================
     const blogQuery = (params: { page:number,size:number }) => {
       loading.value = true;
       axios.get("/blog/list", {
@@ -96,7 +195,7 @@ export default defineComponent({
         const data = response.data;
         blogs.value = data.content.list;
 
-        // 重置分页按钮
+        // reload pagination
         pagination.value.current = params.page;
         pagination.value.total = data.content.total;
       });
@@ -116,6 +215,11 @@ export default defineComponent({
       pagination,
       columns,
       loading,
+      edit_visible,
+      edit,
+      edit_onClose,
+      edit_Submit,
+      record_blog,
     }
   }
 });

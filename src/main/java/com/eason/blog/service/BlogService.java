@@ -3,7 +3,8 @@ package com.eason.blog.service;
 import com.eason.blog.domain.Blog;
 import com.eason.blog.domain.BlogExample;
 import com.eason.blog.mapper.BlogMapper;
-import com.eason.blog.req.BlogReq;
+import com.eason.blog.req.BlogQueryReq;
+import com.eason.blog.req.BlogSaveReq;
 import com.eason.blog.resp.BlogResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
@@ -25,7 +26,7 @@ public class BlogService {
     @Resource
     private BlogMapper blogMapper;
 
-    public PageResp<BlogResp> list(BlogReq req){
+    public PageResp<BlogResp> list(BlogQueryReq req){
         BlogExample blogExample = new BlogExample();
         BlogExample.Criteria criteria = blogExample.createCriteria();
 
@@ -47,6 +48,19 @@ public class BlogService {
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
+
+    }
+
+
+    public void save(BlogSaveReq req){
+        Blog blog = CopyUtil.copy(req,Blog.class);
+        if (ObjectUtils.isEmpty(req.getId())){
+            // insert
+            blogMapper.insert(blog);
+        }else {
+            //update
+            blogMapper.updateByPrimaryKey(blog);
+        }
 
     }
 
