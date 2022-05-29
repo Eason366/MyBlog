@@ -34,12 +34,12 @@ public class BlogSaveReq {
         this.name = name;
     }
 
-    public Long getCategory1Id() {
+    public Long getCategory() {
         return category;
     }
 
-    public void setCategory1Id(Long category1Id) {
-        this.category = category1Id;
+    public void setCategory(Long category) {
+        this.category = category;
     }
 
     public String getDescription() {
@@ -82,7 +82,7 @@ public class BlogSaveReq {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
-        sb.append(", category1Id=").append(category);
+        sb.append(", category=").append(category);
         sb.append(", description=").append(description);
         sb.append(", cover=").append(cover);
         sb.append(", viewCount=").append(viewCount);

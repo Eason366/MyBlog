@@ -243,7 +243,7 @@ export default defineComponent({
           categorys.value = data.content;
           CategoryParentLevel.value = [];
           CategoryParentLevel.value = Tool.array2Tree(categorys.value,0);
-          console.log("树形结构：", CategoryParentLevel.value);
+          console.log("Tree：", CategoryParentLevel.value);
 
           loading.value = false;
 

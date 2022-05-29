@@ -28,6 +28,9 @@
           :pagination="pagination"
           :loading="loading"
       >
+        <template v-slot:category="{ text, record }">
+          <span>{{ getCategoryName(record.category) }}</span>
+        </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -57,7 +60,7 @@
           @close="edit_onClose"
       >
 
-        <a-form :model="record_blog" layout="vertical" :rules="rules">
+        <a-form :model="record_blog" layout="vertical">
           <a-row :gutter="16">
             <a-col :span="24">
           <a-form-item label="Name" name="Name">
@@ -77,7 +80,17 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Category">
-                <a-input v-model:value="record_blog.category" placeholder="Please enter blog Category"/>
+                <a-tree-select
+                    v-model:value="record_blog.category"
+                    style="width: 100%"
+                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :tree-data="treeSelectData"
+                    placeholder="Please enter blog Category"
+                    tree-default-expand-all
+                    :replaceFields="{title: 'name', key: 'id', value: 'id'}"
+                    :disabled="record_blog.id === 0"
+                >
+                </a-tree-select>
               </a-form-item>
             </a-col>
           </a-row>
@@ -143,7 +156,8 @@ export default defineComponent({
       {
         title: 'Category',
         key: 'category',
-        dataIndex: 'category'
+        dataIndex: 'category',
+        slots: { customRender: 'category' }
       },
       {
         title: 'View Count',
@@ -160,8 +174,24 @@ export default defineComponent({
       }
     ];
 
+    const getCategoryName = (cid: number) => {
+      // console.log(cid)
+      let result = "";
+      categorys?.forEach((item: any) => {
+        if (item.id === cid) {
+          result = item.name;
+        }
+      });
+      return result;
+    };
+
+
+    const treeSelectData = ref();
+    treeSelectData.value = [];
     const blogs = ref();
     const pageSize = 10;
+    const CategoryParentLevel = ref();
+    let categorys: any;
 
 
     const pagination = ref({
@@ -197,18 +227,23 @@ export default defineComponent({
     const edit_visible = ref<boolean>(false);
     const record_blog = ref({});
 
-    const rules = {
-      Name:[{required: true,message: 'Please Enter blog Name', trigger: 'blur' }]
-    }
 
-    const edit = (record:JSON) => {
+    const edit = (record:any) => {
       edit_visible.value = true;
       record_blog.value = Tool.copy(record)
+
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value);
+      setDisable(treeSelectData.value, record.id);
+
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     };
 
     const add = () => {
       edit_visible.value = true;
       record_blog.value = {};
+
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     };
 
     const edit_onClose = () => {
@@ -222,6 +257,7 @@ export default defineComponent({
     const edit_Submit = () => {
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
+        console.log(record_blog.value)
         if (data.success) {
           edit_visible.value = false;
 
@@ -234,6 +270,39 @@ export default defineComponent({
           message.error(data.message)
         }
       });
+    };
+
+//========================  setDisable ========================
+
+    /**
+     * Set a node and its descendants to disabled
+     */
+    const setDisable = (treeSelectData: any, id: any) => {
+      // console.log(treeSelectData, id);
+      // Traverse the array, that is, traverse a layer of nodes
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if (node.id === id) {
+          // if the current node is the target node
+          console.log("disabled", node);
+          // Set the target node to disabled
+          node.disabled = true;
+
+          // Traverse all child nodes and add disabled to all child nodes
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              setDisable(children, children[j].id)
+            }
+          }
+        } else {
+          // If the current node is not the target node, go to its child nodes and look for it.
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            setDisable(children, id);
+          }
+        }
+      }
     };
 
 
@@ -254,6 +323,26 @@ export default defineComponent({
           // reload pagination
           pagination.value.current = params.page;
           pagination.value.total = data.content.total;
+        } else {
+          message.error(data.message)
+        }
+
+      });
+    };
+
+    const categoryQuery = () => {
+      loading.value = true;
+      axios.get("/category/all").then((response) => {
+
+        const data = response.data;
+        if (data.success){
+          categorys = data.content;
+          CategoryParentLevel.value = [];
+          CategoryParentLevel.value = Tool.array2Tree(categorys,0);
+          console.log("Tree：", CategoryParentLevel.value);
+
+          loading.value = false;
+
         } else {
           message.error(data.message)
         }
@@ -291,6 +380,7 @@ export default defineComponent({
         page:pagination.value.current,
         size:pagination.value.pageSize,
       })
+      categoryQuery()
     });
 
     return {
@@ -301,12 +391,13 @@ export default defineComponent({
       edit_visible,
       edit,
       add,
-      rules,
       onSearch,
       onDelete,
+      treeSelectData,
       edit_onClose,
       edit_Submit,
       record_blog,
+      getCategoryName,
     }
   }
 });
