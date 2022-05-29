@@ -32,14 +32,15 @@ public class CategoryService {
 
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req){
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Category> categorysList = categoryMapper.selectByExample(categoryExample);
 
 
         PageInfo<Category> pageInfo = new PageInfo<>(categorysList);
-        LOG.info("总行数：{}", pageInfo.getTotal());
-        LOG.info("总页数：{}", pageInfo.getPages());
+        LOG.info("Total Rows：{}", pageInfo.getTotal());
+        LOG.info("Total Pages：{}", pageInfo.getPages());
 
         List<CategoryQueryResp> list = CopyUtil.copyList(categorysList, CategoryQueryResp.class);
 
@@ -66,6 +67,18 @@ public class CategoryService {
 
     public void delete(Long id){
         categoryMapper.deleteByPrimaryKey(id);
+    }
+
+
+    public List<CategoryQueryResp> all() {
+        CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
+        List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
+
+        // copy
+        List<CategoryQueryResp> list = CopyUtil.copyList(categoryList, CategoryQueryResp.class);
+
+        return list;
     }
 
 }

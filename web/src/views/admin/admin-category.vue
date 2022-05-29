@@ -5,8 +5,6 @@
         style="padding: 78px 100px"
     >
 
-
-
       <a-space size="large">
         <a-button type="primary" @click="add" size="large">
           Add Category
@@ -16,9 +14,9 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
-          :pagination="pagination"
+          :data-source="CategoryParentLevel"
           :loading="loading"
+          :pagination="false"
       >
         <template v-slot:action="{ text, record }">
           <a-space size="small">
@@ -133,20 +131,7 @@ export default defineComponent({
     ];
 
     const categorys = ref();
-    const pageSize = 10;
-
-
-    const pagination = ref({
-      onChange: (page: number) => {
-        categoryQuery({
-          page:page,
-          size:pageSize,
-        })
-      },
-      current: 1,
-      pageSize: pageSize,
-      total: 0
-    });
+    const CategoryParentLevel = ref(); // 一级分类树，children属性就是二级分类
 
     const onDelete = (id:number) => {
       axios.delete("/category/delete/"+id ).then((response) => {
@@ -154,10 +139,7 @@ export default defineComponent({
         if (data.success) {
           message.success('Category Deleted Successfully');
           // reload
-          categoryQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          })
+          categoryQuery()
         }else {
           message.error(data.message)
         }
@@ -185,10 +167,7 @@ export default defineComponent({
 
     const edit_onClose = () => {
       edit_visible.value = false;
-      categoryQuery({
-        page:pagination.value.current,
-        size:pagination.value.pageSize,
-      })
+      categoryQuery()
     };
 
     const edit_Submit = () => {
@@ -198,10 +177,7 @@ export default defineComponent({
           edit_visible.value = false;
 
           // reload
-          categoryQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          })
+          categoryQuery()
         }else {
           message.error(data.message)
         }
@@ -210,22 +186,18 @@ export default defineComponent({
 
 
     //========================  Query ========================
-    const categoryQuery = (params: { page:number,size:number }) => {
+    const categoryQuery = () => {
       loading.value = true;
-      axios.get("/category/list", {
-        params: {
-          page: params.page,
-          size: params.size,
-        }
-      }).then((response) => {
+      axios.get("/category/all").then((response) => {
 
         const data = response.data;
         if (data.success){
-          categorys.value = data.content.list;
+          categorys.value = data.content;
+          CategoryParentLevel.value = [];
+          CategoryParentLevel.value = Tool.array2Tree(categorys.value,0);
+          console.log("树形结构：", CategoryParentLevel.value);
           loading.value = false;
-          // reload pagination
-          pagination.value.current = params.page;
-          pagination.value.total = data.content.total;
+
         } else {
           message.error(data.message)
         }
@@ -237,15 +209,11 @@ export default defineComponent({
 
 
     onMounted(() => {
-      categoryQuery({
-        page:pagination.value.current,
-        size:pagination.value.pageSize,
-      })
+      categoryQuery()
     });
 
     return {
-      categorys,
-      pagination,
+      CategoryParentLevel,
       columns,
       loading,
       edit_visible,

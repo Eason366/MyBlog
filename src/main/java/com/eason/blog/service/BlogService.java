@@ -43,8 +43,8 @@ public class BlogService {
 
 
         PageInfo<Blog> pageInfo = new PageInfo<>(blogsList);
-        LOG.info("总行数：{}", pageInfo.getTotal());
-        LOG.info("总页数：{}", pageInfo.getPages());
+        LOG.info("Total Rows：{}", pageInfo.getTotal());
+        LOG.info("Total Pages：{}", pageInfo.getPages());
 
         List<BlogQueryResp> list = CopyUtil.copyList(blogsList, BlogQueryResp.class);
 
