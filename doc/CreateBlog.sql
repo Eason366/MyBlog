@@ -28,3 +28,23 @@ insert into `blog` (id, name) values (36, 'Python 入门教程');
 insert into `blog` (id, name) values (47, 'Mysql 入门教程');
 insert into `blog` (id, name) values (51, 'Oracle 入门教程');
 
+
+# 分类
+drop table if exists `category`;
+create table `category` (
+    `id` bigint not null comment 'id',
+    `parent` bigint not null default 0 comment 'parent',
+    `name` varchar(50) not null comment 'name',
+    `sort` int comment 'sort',
+    primary key (`id`)
+) engine=innodb default charset=utf8mb4 comment='分类';
+
+insert into `category` (id, parent, name, sort) values (200, 000, 'Java', 200);
+insert into `category` (id, parent, name, sort) values (201, 200, 'LeetCode', 201);
+insert into `category` (id, parent, name, sort) values (202, 200, 'Spring', 202);
+insert into `category` (id, parent, name, sort) values (300, 000, 'Python', 300);
+insert into `category` (id, parent, name, sort) values (301, 300, 'Crawler', 301);
+insert into `category` (id, parent, name, sort) values (302, 300, 'Machine Learning', 302);
+insert into `category` (id, parent, name, sort) values (400, 000, 'DataBase', 400);
+insert into `category` (id, parent, name, sort) values (401, 400, 'MySQL', 401);
+insert into `category` (id, parent, name, sort) values (500, 000, 'Other', 500);
