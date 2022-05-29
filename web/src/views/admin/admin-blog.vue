@@ -5,11 +5,21 @@
         style="padding: 78px 100px"
     >
 
-      <p>
+
+
+      <a-space size="large">
         <a-button type="primary" @click="add" size="large">
           Add Blog
         </a-button>
-      </p>
+
+        <a-input-search
+            placeholder="Input Name to Search"
+            style="width: 500px"
+            size="large"
+            enter-button="Search"
+            @search="onSearch"
+        />
+        </a-space>
 
       <a-table
           :columns="columns"
@@ -121,6 +131,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
+import { Tool } from '@/util/tool';
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -205,7 +216,7 @@ export default defineComponent({
 
     const edit = (record:JSON) => {
       edit_visible.value = true;
-      record_blog.value = record
+      record_blog.value = Tool.copy(record)
     };
 
     const add = () => {
@@ -245,7 +256,7 @@ export default defineComponent({
       axios.get("/blog/list", {
         params: {
           page: params.page,
-          size: params.size
+          size: params.size,
         }
       }).then((response) => {
 
@@ -263,6 +274,29 @@ export default defineComponent({
       });
     };
 
+    //========================  Search ========================
+    const onSearch = (searchValue: string) => {
+      loading.value = true;
+      axios.get("/blog/list", {
+        params: {
+          page:pagination.value.current,
+          size:pagination.value.pageSize,
+          name: searchValue
+        }
+      }).then((response) => {
+
+        const data = response.data;
+        if (data.success){
+          blogs.value = data.content.list;
+          loading.value = false;
+          // reload pagination
+          pagination.value.total = data.content.total;
+        } else {
+          message.error(data.message)
+        }
+
+      });
+    };
 
 
     onMounted(() => {
@@ -281,6 +315,7 @@ export default defineComponent({
       edit,
       add,
       rules,
+      onSearch,
       onDelete,
       edit_onClose,
       edit_Submit,
