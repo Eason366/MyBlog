@@ -12,6 +12,9 @@
       <a-menu-item key="/admin/blog">
         <router-link to="/admin/blog">Admin Blog</router-link>
       </a-menu-item>
+      <a-menu-item key="/admin/category">
+        <router-link to="/admin/category">Admin Category</router-link>
+      </a-menu-item>
       <a-menu-item key="/about">
         <router-link to="/about">About</router-link>
       </a-menu-item>
