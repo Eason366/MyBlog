@@ -2,55 +2,53 @@
   <a-layout style="padding: 24px 0; background: #fff">
     <a-layout-sider width="240" style="background: #fff"
                     :style="{margin: '64px 0 0', overflow: 'auto', position: 'fixed'}">
-      <a-menu
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
-          mode="inline"
-          style="height: 100%"
-      >
-        <a-sub-menu key="sub1">
-          <template #title>
-                <span>
-                  <appstore-outlined />
-                  subnav 1
-                </span>
-          </template>
-          <a-menu-item key="1">option1</a-menu-item>
-          <a-menu-item key="2">option2</a-menu-item>
-          <a-menu-item key="3">option3</a-menu-item>
-          <a-menu-item key="4">option4</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-                <span>
-                  <appstore-outlined />
-                  subnav 2
-                </span>
-          </template>
-          <a-menu-item key="5">option5</a-menu-item>
-          <a-menu-item key="6">option6</a-menu-item>
-          <a-menu-item key="7">option7</a-menu-item>
-          <a-menu-item key="8">option8</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub3">
-          <template #title>
-                <span>
-                  <appstore-outlined />
-                  subnav 3
-                </span>
-          </template>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
-        </a-sub-menu>
+      <a-avatar :size="200" style="background-color: #87d068"
+                :style="{margin: '20px 25px', overflow: 'auto', position: 'fixed'}">
+        <template #icon>
+          <UserOutlined />
+        </template>
+      </a-avatar>
+      <div class="User"
+           :style="{margin: '220px 105px', overflow: 'auto', position: 'fixed'}">
+        Eason
+      </div>
+
+      <a-menu style="width: 240px"
+              :style="{margin: '260px 0px', overflow: 'auto', position: 'fixed'}">
+
+        <a href="https://github.com/Eason366">
+          <a-menu-item key="GithubOutlined" >
+            <template #icon>
+              <GithubFilled />
+            </template>
+            Github
+          </a-menu-item>
+        </a>
+        <a href="https://www.linkedin.com/in/eason-wang366/">
+          <a-menu-item key="LinkedinOutlined">
+            <template #icon>
+              <LinkedinFilled />
+            </template>
+            LinkedIn
+          </a-menu-item>
+        </a>
+        <a href="mailto:wangy366@miamioh.edu">
+          <a-menu-item key="MailOutlined">
+            <template #icon>
+              <MailFilled />
+            </template>
+            Email
+          </a-menu-item>
+        </a>
+
       </a-menu>
+
     </a-layout-sider>
     <a-layout-content :style="{ minHeight: '780px', margin: '24px 16px 0', overflow: 'initial' }">
 
       <a-list item-layout="vertical" size="large" :pagination="pagination"
               :data-source="blogs"
-              :style="{margin: '24px 240px'}">
+              :style="{margin: '30px 240px 0 500px'}">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
@@ -83,7 +81,7 @@
 
 
 <script lang="ts">
-import { AppstoreOutlined,EyeOutlined} from '@ant-design/icons-vue';
+import { AppstoreOutlined,EyeOutlined,UserOutlined,GithubFilled,LinkedinFilled,MailFilled} from '@ant-design/icons-vue';
 import { defineComponent, ref ,onMounted} from 'vue';
 import axios from 'axios';
 
@@ -92,6 +90,10 @@ export default defineComponent({
   components: {
     AppstoreOutlined,
     EyeOutlined,
+    UserOutlined,
+    GithubFilled,
+    LinkedinFilled,
+    MailFilled,
   },
   setup() {
     console.log("setup");
@@ -140,9 +142,12 @@ export default defineComponent({
       selectedKeys2: ref<string[]>(['1']),
       openKeys: ref<string[]>(['sub1']),
       EyeOutlined,
+      UserOutlined,
       pagination,
       blogs,
-
+      GithubFilled,
+      LinkedinFilled,
+      MailFilled,
     };
   },
 });
@@ -151,5 +156,12 @@ export default defineComponent({
 <style>
 .title {
   font-size: 24px;
+}
+.User {
+  width: 120px;
+  height: 31px;
+  float: left;
+  color: black;
+  font-size: 18px;
 }
 </style>
