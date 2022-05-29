@@ -4,8 +4,7 @@
   <resultMap id="BaseResultMap" type="com.eason.blog.domain.Blog">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="category1_id" jdbcType="BIGINT" property="category1Id" />
-    <result column="category2_id" jdbcType="BIGINT" property="category2Id" />
+    <result column="category" jdbcType="BIGINT" property="category" />
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="cover" jdbcType="VARCHAR" property="cover" />
     <result column="view_count" jdbcType="INTEGER" property="viewCount" />
@@ -70,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`, category1_id, category2_id, description, cover, view_count, vote_count
+    id, `name`, category, description, cover, view_count, vote_count
   </sql>
   <select id="selectByExample" parameterType="com.eason.blog.domain.BlogExample" resultMap="BaseResultMap">
     select
@@ -103,12 +102,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.eason.blog.domain.Blog">
-    insert into blog (id, `name`, category1_id, 
-      category2_id, description, cover, 
-      view_count, vote_count)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{category1Id,jdbcType=BIGINT}, 
-      #{category2Id,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, 
-      #{viewCount,jdbcType=INTEGER}, #{voteCount,jdbcType=INTEGER})
+    insert into blog (id, `name`, category, 
+      description, cover, view_count, 
+      vote_count)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{category,jdbcType=BIGINT}, 
+      #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, #{viewCount,jdbcType=INTEGER}, 
+      #{voteCount,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.eason.blog.domain.Blog">
     insert into blog
@@ -119,11 +118,8 @@
       <if test="name != null">
         `name`,
       </if>
-      <if test="category1Id != null">
-        category1_id,
-      </if>
-      <if test="category2Id != null">
-        category2_id,
+      <if test="category != null">
+        category,
       </if>
       <if test="description != null">
         description,
@@ -145,11 +141,8 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="category1Id != null">
-        #{category1Id,jdbcType=BIGINT},
-      </if>
-      <if test="category2Id != null">
-        #{category2Id,jdbcType=BIGINT},
+      <if test="category != null">
+        #{category,jdbcType=BIGINT},
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
@@ -180,11 +173,8 @@
       <if test="record.name != null">
         `name` = #{record.name,jdbcType=VARCHAR},
       </if>
-      <if test="record.category1Id != null">
-        category1_id = #{record.category1Id,jdbcType=BIGINT},
-      </if>
-      <if test="record.category2Id != null">
-        category2_id = #{record.category2Id,jdbcType=BIGINT},
+      <if test="record.category != null">
+        category = #{record.category,jdbcType=BIGINT},
       </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
@@ -207,8 +197,7 @@
     update blog
     set id = #{record.id,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
-      category1_id = #{record.category1Id,jdbcType=BIGINT},
-      category2_id = #{record.category2Id,jdbcType=BIGINT},
+      category = #{record.category,jdbcType=BIGINT},
       description = #{record.description,jdbcType=VARCHAR},
       cover = #{record.cover,jdbcType=VARCHAR},
       view_count = #{record.viewCount,jdbcType=INTEGER},
@@ -223,11 +212,8 @@
       <if test="name != null">
         `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="category1Id != null">
-        category1_id = #{category1Id,jdbcType=BIGINT},
-      </if>
-      <if test="category2Id != null">
-        category2_id = #{category2Id,jdbcType=BIGINT},
+      <if test="category != null">
+        category = #{category,jdbcType=BIGINT},
       </if>
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
@@ -247,8 +233,7 @@
   <update id="updateByPrimaryKey" parameterType="com.eason.blog.domain.Blog">
     update blog
     set `name` = #{name,jdbcType=VARCHAR},
-      category1_id = #{category1Id,jdbcType=BIGINT},
-      category2_id = #{category2Id,jdbcType=BIGINT},
+      category = #{category,jdbcType=BIGINT},
       description = #{description,jdbcType=VARCHAR},
       cover = #{cover,jdbcType=VARCHAR},
       view_count = #{viewCount,jdbcType=INTEGER},

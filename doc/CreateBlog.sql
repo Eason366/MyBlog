@@ -2,8 +2,7 @@ drop table if exists `blog`;
 create table `blog` (
   `id` bigint not null comment 'id',
   `name` varchar(50) comment 'name',
-  `category1_id` bigint comment 'category1_id',
-  `category2_id` bigint comment 'category2_id',
+  `category` bigint comment 'category',
   `description` varchar(200) default 'I just moved to San Francisco last week from London, so I can provide some perspective.' comment 'description',
   `cover` varchar(200) default 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' comment 'cover',
   `view_count` int not null default 0 comment 'view_count',

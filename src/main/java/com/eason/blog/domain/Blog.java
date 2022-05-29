@@ -5,9 +5,7 @@ public class Blog {
 
     private String name;
 
-    private Long category1Id;
-
-    private Long category2Id;
+    private Long category;
 
     private String description;
 
@@ -33,20 +31,12 @@ public class Blog {
         this.name = name;
     }
 
-    public Long getCategory1Id() {
-        return category1Id;
+    public Long getCategory() {
+        return category;
     }
 
-    public void setCategory1Id(Long category1Id) {
-        this.category1Id = category1Id;
-    }
-
-    public Long getCategory2Id() {
-        return category2Id;
-    }
-
-    public void setCategory2Id(Long category2Id) {
-        this.category2Id = category2Id;
+    public void setCategory(Long category) {
+        this.category = category;
     }
 
     public String getDescription() {
@@ -89,8 +79,7 @@ public class Blog {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", name=").append(name);
-        sb.append(", category1Id=").append(category1Id);
-        sb.append(", category2Id=").append(category2Id);
+        sb.append(", category=").append(category);
         sb.append(", description=").append(description);
         sb.append(", cover=").append(cover);
         sb.append(", viewCount=").append(viewCount);
