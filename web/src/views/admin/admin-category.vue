@@ -47,7 +47,7 @@
           @close="edit_onClose"
       >
 
-        <a-form :model="record_category" layout="vertical" :rules="rules">
+        <a-form :model="record_category" layout="vertical">
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Name" name="Name">
@@ -59,7 +59,17 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Parent" name="Parent">
-                <a-input v-model:value="record_category.parent" placeholder="Please enter category Name"/>
+                <a-tree-select
+                    v-model:value="record_category.parent"
+                    style="width: 100%"
+                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :tree-data="treeSelectData"
+                    placeholder="Please enter Parent category "
+                    tree-default-expand-all
+                    :replaceFields="{title: 'name', key: 'id', value: 'id'}"
+                    :disabled="record_category.id === 0"
+                >
+                </a-tree-select>
               </a-form-item>
             </a-col>
           </a-row>
@@ -67,7 +77,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Sort" name="Sort">
-                <a-input v-model:value="record_category.sort" placeholder="Please enter category Name"/>
+                <a-input v-model:value="record_category.sort" placeholder="Please enter category Sort"/>
               </a-form-item>
             </a-col>
           </a-row>
@@ -109,7 +119,8 @@ export default defineComponent({
   name: 'AdminEbook',
   setup() {
     const loading = ref(false);
-
+    const treeSelectData = ref();
+    treeSelectData.value = [];
     const columns = [
       {
         title: 'Name',
@@ -131,7 +142,7 @@ export default defineComponent({
     ];
 
     const categorys = ref();
-    const CategoryParentLevel = ref(); // 一级分类树，children属性就是二级分类
+    const CategoryParentLevel = ref();
 
     const onDelete = (id:number) => {
       axios.delete("/category/delete/"+id ).then((response) => {
@@ -151,18 +162,23 @@ export default defineComponent({
     const edit_visible = ref<boolean>(false);
     const record_category = ref({});
 
-    const rules = {
-      Name:[{required: true,message: 'Please Enter category Name', trigger: 'blur' }]
-    }
 
-    const edit = (record:JSON) => {
+    const edit = (record:any) => {
       edit_visible.value = true;
       record_category.value = Tool.copy(record)
+
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value);
+      setDisable(treeSelectData.value, record.id);
+
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     };
 
     const add = () => {
       edit_visible.value = true;
       record_category.value = {};
+
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     };
 
     const edit_onClose = () => {
@@ -184,6 +200,38 @@ export default defineComponent({
       });
     };
 
+    //========================  setDisable ========================
+
+    /**
+     * Set a node and its descendants to disabled
+     */
+    const setDisable = (treeSelectData: any, id: any) => {
+      // console.log(treeSelectData, id);
+      // Traverse the array, that is, traverse a layer of nodes
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if (node.id === id) {
+          // if the current node is the target node
+          console.log("disabled", node);
+          // Set the target node to disabled
+          node.disabled = true;
+
+          // Traverse all child nodes and add disabled to all child nodes
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              setDisable(children, children[j].id)
+            }
+          }
+        } else {
+          // If the current node is not the target node, go to its child nodes and look for it.
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            setDisable(children, id);
+          }
+        }
+      }
+    };
 
     //========================  Query ========================
     const categoryQuery = () => {
@@ -196,6 +244,7 @@ export default defineComponent({
           CategoryParentLevel.value = [];
           CategoryParentLevel.value = Tool.array2Tree(categorys.value,0);
           console.log("树形结构：", CategoryParentLevel.value);
+
           loading.value = false;
 
         } else {
@@ -219,7 +268,7 @@ export default defineComponent({
       edit_visible,
       edit,
       add,
-      rules,
+      treeSelectData,
       onDelete,
       edit_onClose,
       edit_Submit,
