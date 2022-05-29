@@ -2,19 +2,28 @@
   <a-layout style="padding: 24px 0; background: #fff">
     <a-layout-sider width="240" style="background: #fff"
                     :style="{margin: '64px 0 0', overflow: 'auto', position: 'fixed'}">
+
+      <a-input-search
+          placeholder="input search text"
+          style="width: 200px"
+          @search="onSearch"
+          :style="{margin: '0px 25px', overflow: 'auto', position: 'fixed'}"
+      />
+
+
       <a-avatar :size="200" style="background-color: #87d068"
-                :style="{margin: '20px 25px', overflow: 'auto', position: 'fixed'}">
+                :style="{margin: '60px 25px', overflow: 'auto', position: 'fixed'}">
         <template #icon>
           <UserOutlined />
         </template>
       </a-avatar>
       <div class="User"
-           :style="{margin: '220px 105px', overflow: 'auto', position: 'fixed'}">
+           :style="{margin: '280px 100px', overflow: 'auto', position: 'fixed'}">
         Eason
       </div>
 
       <a-menu style="width: 240px"
-              :style="{margin: '260px 0px', overflow: 'auto', position: 'fixed'}">
+              :style="{margin: '360px 0px', overflow: 'auto', position: 'fixed'}">
 
         <a href="https://github.com/Eason366">
           <a-menu-item key="GithubOutlined" >
@@ -84,6 +93,7 @@
 import { AppstoreOutlined,EyeOutlined,UserOutlined,GithubFilled,LinkedinFilled,MailFilled} from '@ant-design/icons-vue';
 import { defineComponent, ref ,onMounted} from 'vue';
 import axios from 'axios';
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   name: 'Home',
@@ -112,6 +122,28 @@ export default defineComponent({
       pageSize:pageSize,
       total: 0
     });
+
+    //========================  Search ========================
+    const onSearch = (searchValue: string) => {
+      axios.get("/blog/list", {
+        params: {
+          page:pagination.value.current,
+          size:pagination.value.pageSize,
+          name: searchValue
+        }
+      }).then((response) => {
+
+        const data = response.data;
+        console.log(data)
+        if (data.success){
+          blogs.value = data.content.list;
+          // reload pagination
+          pagination.value.total = data.content.total;
+        } else {
+          message.error(data.message)
+        }
+      });
+    };
 
     const blogQuery = (params: { page:number,size:number }) => {
       axios.get("/blog/list", {
@@ -145,6 +177,7 @@ export default defineComponent({
       UserOutlined,
       pagination,
       blogs,
+      onSearch,
       GithubFilled,
       LinkedinFilled,
       MailFilled,
