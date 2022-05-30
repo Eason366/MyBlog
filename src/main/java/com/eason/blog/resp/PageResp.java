@@ -23,12 +23,6 @@ public class PageResp<T> {
         this.list = list;
     }
 
-    public void addList(List<T> list) {
-        for (T l : list){
-            this.list.add(l);
-        }
-    }
-
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("PageResp{");
