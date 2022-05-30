@@ -5,6 +5,7 @@ import com.eason.blog.domain.BlogExample;
 import com.eason.blog.mapper.BlogMapper;
 import com.eason.blog.req.BlogQueryReq;
 import com.eason.blog.req.BlogSaveReq;
+import com.eason.blog.req.CategoryQueryReq;
 import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
@@ -36,6 +37,9 @@ public class BlogService {
 
         if (!ObjectUtils.isEmpty(req.getName())){
             criteria.andNameLike("%"+req.getName()+"%");
+        }
+        if (!ObjectUtils.isEmpty(req.getCategory())){
+            criteria.andCategoryEqualTo(req.getCategory());
         }
 
         PageHelper.startPage(req.getPage(), req.getSize());
@@ -75,5 +79,8 @@ public class BlogService {
     public void delete(Long id){
         blogMapper.deleteByPrimaryKey(id);
     }
+
+
+
 
 }

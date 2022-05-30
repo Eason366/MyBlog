@@ -5,52 +5,19 @@
 
       <a-input-search
           placeholder="input search text"
-          style="width: 200px"
+          style="width: 230px"
           @search="onSearch"
           :style="{margin: '0px 25px', overflow: 'auto', position: 'fixed'}"
       />
 
+      <a-tree
+          :tree-data="CategoryParentLevel"
+          v-model:selectedKeys="selectedKeys"
+          :style="{margin: '50px 10px', overflow: 'auto', position: 'fixed'}"
+          :replace-fields="{title: 'name', key:'id'}"
+      >
+      </a-tree>
 
-      <a-avatar :size="200" style="background-color: #87d068"
-                :style="{margin: '60px 25px', overflow: 'auto', position: 'fixed'}">
-        <template #icon>
-          <UserOutlined />
-        </template>
-      </a-avatar>
-      <div class="User"
-           :style="{margin: '280px 100px', overflow: 'auto', position: 'fixed'}">
-        Eason
-      </div>
-
-      <a-menu style="width: 240px"
-              :style="{margin: '360px 0px', overflow: 'auto', position: 'fixed'}">
-
-        <a href="https://github.com/Eason366">
-          <a-menu-item key="GithubOutlined" >
-            <template #icon>
-              <GithubFilled />
-            </template>
-            Github
-          </a-menu-item>
-        </a>
-        <a href="https://www.linkedin.com/in/eason-wang366/">
-          <a-menu-item key="LinkedinOutlined">
-            <template #icon>
-              <LinkedinFilled />
-            </template>
-            LinkedIn
-          </a-menu-item>
-        </a>
-        <a href="mailto:wangy366@miamioh.edu">
-          <a-menu-item key="MailOutlined">
-            <template #icon>
-              <MailFilled />
-            </template>
-            Email
-          </a-menu-item>
-        </a>
-
-      </a-menu>
 
     </a-layout-sider>
     <a-layout-content :style="{ minHeight: '780px', margin: '24px 16px 0', overflow: 'initial' }">
@@ -91,9 +58,10 @@
 
 <script lang="ts">
 import { AppstoreOutlined,EyeOutlined,UserOutlined,GithubFilled,LinkedinFilled,MailFilled} from '@ant-design/icons-vue';
-import { defineComponent, ref ,onMounted} from 'vue';
+import {defineComponent, ref, onMounted, watch} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
+import {Tool} from "@/util/tool";
 
 export default defineComponent({
   name: 'Home',
@@ -109,6 +77,8 @@ export default defineComponent({
     console.log("setup");
     const blogs = ref()
     const pageSize = 10
+    let categorys: any;
+    const CategoryParentLevel = ref();
 
 
     const pagination = ref({
@@ -122,6 +92,30 @@ export default defineComponent({
       pageSize:pageSize,
       total: 0
     });
+
+    const selectedKeys = ref<string[]>([]);
+    watch(selectedKeys, () => {
+      console.log('selectedKeys', selectedKeys.value);
+      axios.get("/category/child", {
+        params: {
+          page:pagination.value.current,
+          size:pagination.value.pageSize,
+          id: selectedKeys.value[0]
+        }
+      }).then((response) => {
+
+        const data = response.data;
+        console.log(data)
+        if (data.success){
+          blogs.value = data.content.list;
+          // reload pagination
+          pagination.value.total = data.content.total;
+        } else {
+          message.error(data.message)
+        }
+      });
+    });
+
 
     //========================  Search ========================
     const onSearch = (searchValue: string) => {
@@ -161,12 +155,30 @@ export default defineComponent({
       });
     };
 
+    const categoryQuery = () => {
+      axios.get("/category/all").then((response) => {
+
+        const data = response.data;
+        if (data.success){
+          categorys = data.content;
+          CategoryParentLevel.value = [];
+          CategoryParentLevel.value = Tool.array2Tree(categorys,0);
+          console.log("Tree：", CategoryParentLevel.value);
+
+
+        } else {
+          message.error(data.message)
+        }
+
+      });
+    };
 
     onMounted(()=>{
       blogQuery({
         page:pagination.value.current,
         size:pageSize,
-      })
+      }),
+      categoryQuery()
     });
 
     return {
@@ -177,10 +189,12 @@ export default defineComponent({
       UserOutlined,
       pagination,
       blogs,
+      CategoryParentLevel,
       onSearch,
       GithubFilled,
       LinkedinFilled,
       MailFilled,
+      selectedKeys,
     };
   },
 });

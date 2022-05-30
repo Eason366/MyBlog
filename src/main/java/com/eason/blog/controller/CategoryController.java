@@ -3,6 +3,7 @@ package com.eason.blog.controller;
 
 import com.eason.blog.req.CategoryQueryReq;
 import com.eason.blog.req.CategorySaveReq;
+import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.CategoryQueryResp;
 import com.eason.blog.resp.CommonResp;
 import com.eason.blog.resp.PageResp;
@@ -48,6 +49,14 @@ public class CategoryController {
     public CommonResp delete(@PathVariable Long id) {
         CommonResp resp = new CommonResp<>();
         categoryService.delete(id);
+        return resp;
+    }
+
+    @GetMapping("/child")
+    public CommonResp child(@Valid CategoryQueryReq req) {
+        CommonResp<PageResp<BlogQueryResp>> resp = new CommonResp<>();
+        PageResp<BlogQueryResp> list =  categoryService.child(req);
+        resp.setContent(list);
         return resp;
     }
 

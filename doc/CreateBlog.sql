@@ -47,3 +47,8 @@ insert into `category` (id, parent, name, sort) values (302, 300, 'Machine Learn
 insert into `category` (id, parent, name, sort) values (400, 000, 'DataBase', 400);
 insert into `category` (id, parent, name, sort) values (401, 400, 'MySQL', 401);
 insert into `category` (id, parent, name, sort) values (500, 000, 'Other', 500);
+
+
+select *
+from category
+where id=200 or parent =200
