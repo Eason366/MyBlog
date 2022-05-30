@@ -144,8 +144,39 @@ export default defineComponent({
     const categorys = ref();
     const CategoryParentLevel = ref();
 
+
+    let ids: Array<string> = [];
+    /**
+     * 查找整根树枝
+     */
+    const getDeleteIds = (treeSelectData: any, id: any) => {
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if (node.id === id) {
+          console.log("delete", node);
+          ids.push(id);
+
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              getDeleteIds(children, children[j].id)
+            }
+          }
+        } else {
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            getDeleteIds(children, id);
+          }
+        }
+      }
+    };
+
+
     const onDelete = (id:number) => {
-      axios.delete("/category/delete/"+id ).then((response) => {
+      ids = []
+      getDeleteIds(categorys.value, id);
+      console.log(ids)
+      axios.delete("/category/deleteIDs/"+ids.join(",")).then((response) => {
         const data = response.data;
         if (data.success) {
           message.success('Category Deleted Successfully');

@@ -122,7 +122,6 @@ export default defineComponent({
       console.log('selectedKeys', selectedKeys.value);
       categories = [];
       getAllCategories(categorys,selectedKeys.value[0]);
-      console.log(categories);
       axios.get("/blog/list", {
         params: {
           page:pagination.value.current,

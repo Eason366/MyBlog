@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -49,6 +50,14 @@ public class CategoryController {
     public CommonResp delete(@PathVariable Long id) {
         CommonResp resp = new CommonResp<>();
         categoryService.delete(id);
+        return resp;
+    }
+
+    @DeleteMapping("/deleteIDs/{idsStr}")
+    public CommonResp deleteIDs(@PathVariable String idsStr) {
+        List<String> list = Arrays.asList(idsStr.split(","));
+        CommonResp resp = new CommonResp<>();
+        categoryService.delete(list);
         return resp;
     }
 
