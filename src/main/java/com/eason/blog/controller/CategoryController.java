@@ -52,12 +52,5 @@ public class CategoryController {
         return resp;
     }
 
-    @GetMapping("/child")
-    public CommonResp child(@Valid CategoryQueryReq req) {
-        CommonResp<PageResp<BlogQueryResp>> resp = new CommonResp<>();
-        PageResp<BlogQueryResp> list =  categoryService.child(req);
-        resp.setContent(list);
-        return resp;
-    }
 
 }

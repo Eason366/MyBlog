@@ -1,5 +1,7 @@
 package com.eason.blog.req;
 
+import java.util.List;
+
 public class BlogQueryReq extends PageReq{
     private Long id;
 
@@ -14,6 +16,8 @@ public class BlogQueryReq extends PageReq{
     private Integer viewCount;
 
     private Integer voteCount;
+
+    private String categories;
 
     public Long getId() {
         return id;
@@ -71,20 +75,25 @@ public class BlogQueryReq extends PageReq{
         this.voteCount = voteCount;
     }
 
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", category=").append(category);
-        sb.append(", description=").append(description);
-        sb.append(", cover=").append(cover);
-        sb.append(", viewCount=").append(viewCount);
-        sb.append(", voteCount=").append(voteCount);
-        sb.append("]");
-        return sb.toString();
+        return "BlogQueryReq{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", cover='" + cover + '\'' +
+                ", viewCount=" + viewCount +
+                ", voteCount=" + voteCount +
+                ", categories=" + categories +
+                "} " + super.toString();
     }
 }

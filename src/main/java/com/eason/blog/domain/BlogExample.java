@@ -274,7 +274,7 @@ public class BlogExample {
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIn(List<Long> values) {
+        public Criteria andCategoryIn(List<String> values) {
             addCriterion("category in", values, "category");
             return (Criteria) this;
         }

@@ -5,7 +5,6 @@ import com.eason.blog.domain.BlogExample;
 import com.eason.blog.mapper.BlogMapper;
 import com.eason.blog.req.BlogQueryReq;
 import com.eason.blog.req.BlogSaveReq;
-import com.eason.blog.req.CategoryQueryReq;
 import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -40,6 +40,10 @@ public class BlogService {
         }
         if (!ObjectUtils.isEmpty(req.getCategory())){
             criteria.andCategoryEqualTo(req.getCategory());
+        }
+        if (!ObjectUtils.isEmpty(req.getCategories())){
+            List<String> list = Arrays.asList(req.getCategories().split(","));
+            criteria.andCategoryIn(list);
         }
 
         PageHelper.startPage(req.getPage(), req.getSize());
@@ -79,6 +83,7 @@ public class BlogService {
     public void delete(Long id){
         blogMapper.deleteByPrimaryKey(id);
     }
+
 
 
 

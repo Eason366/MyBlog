@@ -93,14 +93,41 @@ export default defineComponent({
       total: 0
     });
 
+    let categories: Array<string> = [];
+
+    const getAllCategories = (treeSelectData: any, id: any) => {
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if (node.id === id) {
+          categories.push(id);
+
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              getAllCategories(children, children[j].id)
+            }
+          }
+        } else {
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            getAllCategories(children, id);
+          }
+        }
+      }
+    };
+
+
     const selectedKeys = ref<string[]>([]);
     watch(selectedKeys, () => {
       console.log('selectedKeys', selectedKeys.value);
-      axios.get("/category/child", {
+      categories = [];
+      getAllCategories(categorys,selectedKeys.value[0]);
+      console.log(categories);
+      axios.get("/blog/list", {
         params: {
           page:pagination.value.current,
           size:pagination.value.pageSize,
-          id: selectedKeys.value[0]
+          categories:categories.join(","),
         }
       }).then((response) => {
 
@@ -147,11 +174,15 @@ export default defineComponent({
         }
       }).then((response) => {
         const data = response.data;
-        blogs.value = data.content.list;
+        if (data.success){
+          blogs.value = data.content.list;
 
-        // 重置分页按钮
-        pagination.value.current = params.page;
-        pagination.value.total = data.content.total;
+          // 重置分页按钮
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+        }else {
+          message.error(data.message)
+        }
       });
     };
 

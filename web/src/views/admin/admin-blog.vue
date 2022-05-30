@@ -323,6 +323,8 @@ export default defineComponent({
           // reload pagination
           pagination.value.current = params.page;
           pagination.value.total = data.content.total;
+
+          categoryQuery()
         } else {
           message.error(data.message)
         }
@@ -380,7 +382,7 @@ export default defineComponent({
         page:pagination.value.current,
         size:pagination.value.pageSize,
       })
-      categoryQuery()
+
     });
 
     return {
