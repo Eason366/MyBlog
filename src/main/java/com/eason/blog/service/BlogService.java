@@ -87,6 +87,7 @@ public class BlogService {
             //update
             blogMapper.updateByPrimaryKey(blog);
             int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+
             if (count==0){
                 contentMapper.insert(content);
             }
@@ -106,5 +107,9 @@ public class BlogService {
         return blogQueryResp;
     }
 
+    public String findContent(Long id){
+        Content content = contentMapper.selectByPrimaryKey(id);
 
+        return content.getMdcontent();
+    }
 }

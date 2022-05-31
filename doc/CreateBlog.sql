@@ -44,7 +44,8 @@ insert into `category` (id, parent, name, sort) values (500, 000, 'Other', 500);
 drop table if exists `content`;
 create table `content` (
     `id` bigint not null comment 'blogId',
-    `content` mediumtext not null comment 'content',
+    `mdContent` mediumtext comment 'mdContent',
+    `htmlContent` mediumtext comment 'htmlContent',
     primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='blogContent';
 

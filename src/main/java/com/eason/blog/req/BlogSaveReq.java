@@ -18,15 +18,9 @@ public class BlogSaveReq {
 
     private Integer voteCount;
 
-    public String getContent() {
-        return content;
-    }
+    private String mdcontent;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    private String content;
+    private String htmlcontent;
 
     public Long getId() {
         return id;
@@ -84,6 +78,22 @@ public class BlogSaveReq {
         this.voteCount = voteCount;
     }
 
+    public String getMdcontent() {
+        return mdcontent;
+    }
+
+    public void setMdcontent(String mdcontent) {
+        this.mdcontent = mdcontent;
+    }
+
+    public String getHtmlcontent() {
+        return htmlcontent;
+    }
+
+    public void setHtmlcontent(String htmlcontent) {
+        this.htmlcontent = htmlcontent;
+    }
+
     @Override
     public String toString() {
         return "BlogSaveReq{" +
@@ -94,7 +104,8 @@ public class BlogSaveReq {
                 ", cover='" + cover + '\'' +
                 ", viewCount=" + viewCount +
                 ", voteCount=" + voteCount +
-                ", content='" + content + '\'' +
+                ", mdContent='" + mdcontent + '\'' +
+                ", htmlContent='" + htmlcontent + '\'' +
                 '}';
     }
 }

@@ -5,7 +5,8 @@
     <id column="id" jdbcType="BIGINT" property="id" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.eason.blog.domain.Content">
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="mdContent" jdbcType="LONGVARCHAR" property="mdcontent" />
+    <result column="htmlContent" jdbcType="LONGVARCHAR" property="htmlcontent" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -69,7 +70,7 @@
     id
   </sql>
   <sql id="Blob_Column_List">
-    content
+    mdContent, htmlContent
   </sql>
   <select id="selectByExampleWithBLOBs" parameterType="com.eason.blog.domain.ContentExample" resultMap="ResultMapWithBLOBs">
     select
@@ -120,8 +121,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.eason.blog.domain.Content">
-    insert into content (id, content)
-    values (#{id,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
+    insert into content (id, mdContent, htmlContent
+      )
+    values (#{id,jdbcType=BIGINT}, #{mdcontent,jdbcType=LONGVARCHAR}, #{htmlcontent,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.eason.blog.domain.Content">
     insert into content
@@ -129,16 +132,22 @@
       <if test="id != null">
         id,
       </if>
-      <if test="content != null">
-        content,
+      <if test="mdcontent != null">
+        mdContent,
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
+      <if test="mdcontent != null">
+        #{mdcontent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        #{htmlcontent,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -154,8 +163,11 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.content != null">
-        content = #{record.content,jdbcType=LONGVARCHAR},
+      <if test="record.mdcontent != null">
+        mdContent = #{record.mdcontent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.htmlcontent != null">
+        htmlContent = #{record.htmlcontent,jdbcType=LONGVARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -165,7 +177,8 @@
   <update id="updateByExampleWithBLOBs" parameterType="map">
     update content
     set id = #{record.id,jdbcType=BIGINT},
-      content = #{record.content,jdbcType=LONGVARCHAR}
+      mdContent = #{record.mdcontent,jdbcType=LONGVARCHAR},
+      htmlContent = #{record.htmlcontent,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -180,15 +193,19 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.eason.blog.domain.Content">
     update content
     <set>
-      <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
+      <if test="mdcontent != null">
+        mdContent = #{mdcontent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="htmlcontent != null">
+        htmlContent = #{htmlcontent,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.eason.blog.domain.Content">
     update content
-    set content = #{content,jdbcType=LONGVARCHAR}
+    set mdContent = #{mdcontent,jdbcType=LONGVARCHAR},
+      htmlContent = #{htmlcontent,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

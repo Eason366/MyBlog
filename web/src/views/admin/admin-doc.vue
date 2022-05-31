@@ -112,10 +112,12 @@ export default defineComponent({
     //========================  Editor  ========================
     getMdHtml(mdContent: any, htmlContent: string) {
       this.htmlContent = htmlContent
+      this.mdContent = mdContent
     },
     Total_Submit(){
-      console.log(this.htmlContent)
-      this.edit_Submit(this.htmlContent)
+      console.log('mdContent',this.mdContent)
+      console.log('htmlContent',this.htmlContent)
+      this.edit_Submit(this.mdContent,this.htmlContent)
     },
     Total_onClose(){
       this.edit_onClose()
@@ -140,8 +142,9 @@ export default defineComponent({
       blogQuery()
     };
 
-    const edit_Submit = (content:any) => {
-      record_blog.value.content=content
+    const edit_Submit = (mdContent:any,htmlContent:any) => {
+      record_blog.value.mdcontent=mdContent
+      record_blog.value.htmlcontent=htmlContent
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
         console.log(record_blog.value)
