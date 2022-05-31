@@ -2,7 +2,9 @@ package com.eason.blog.service;
 
 import com.eason.blog.domain.Blog;
 import com.eason.blog.domain.BlogExample;
+import com.eason.blog.domain.Content;
 import com.eason.blog.mapper.BlogMapper;
+import com.eason.blog.mapper.ContentMapper;
 import com.eason.blog.req.BlogQueryReq;
 import com.eason.blog.req.BlogSaveReq;
 import com.eason.blog.resp.BlogQueryResp;
@@ -28,6 +30,9 @@ public class BlogService {
 
     @Resource
     private BlogMapper blogMapper;
+
+    @Resource
+    private ContentMapper contentMapper;
 
     @Resource
     private SnowFlake snowFlake;
@@ -67,6 +72,7 @@ public class BlogService {
 
     public void save(BlogSaveReq req){
         Blog blog = CopyUtil.copy(req,Blog.class);
+        Content content = CopyUtil.copy(req,Content.class);
         if (ObjectUtils.isEmpty(req.getId())){
             // insert
             blog.setId(snowFlake.nextId());
@@ -74,9 +80,16 @@ public class BlogService {
             blog.setViewCount(0);
             if (ObjectUtils.isEmpty(req.getCover())) blog.setCover("https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png");
             blogMapper.insert(blog);
+
+            content.setId(blog.getId());
+            contentMapper.insert(content);
         }else {
             //update
             blogMapper.updateByPrimaryKey(blog);
+            int count = contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if (count==0){
+                contentMapper.insert(content);
+            }
         }
 
     }

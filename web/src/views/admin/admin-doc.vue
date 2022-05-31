@@ -45,7 +45,7 @@
                       style="width: 100%"
                       :dropdown-style="{ maxHeight: '400px', overflow: 'auto'}"
                       :tree-data="treeSelectData"
-                      placeholder="Please enter blog Category"
+                      placeholder="Please select blog Category"
                       tree-default-expand-all
                       :replaceFields="{title: 'name', key: 'id', value: 'id'}"
                       :disabled="record_blog.id === 0"
@@ -71,7 +71,9 @@
               <a-col :span="24">
                 <a-form-item label="Content" >
                   <div id="editor">
-                    <mavon-editor v-model="mdContent"
+                    <mavon-editor language="en"
+                                  placeholder="Please start writing your blog..."
+                                  v-model="mdContent"
                                   ref=md @change="getMdHtml" />
                   </div>
                 </a-form-item>
@@ -113,7 +115,7 @@ export default defineComponent({
     },
     Total_Submit(){
       console.log(this.htmlContent)
-      this.edit_Submit()
+      this.edit_Submit(this.htmlContent)
     },
     Total_onClose(){
       this.edit_onClose()
@@ -124,7 +126,8 @@ export default defineComponent({
 
     const route = useRoute()
     const blogs = ref();
-    const record_blog = ref({});
+    const record_blog = ref();
+    record_blog.value={};
     const treeSelectData = ref();
     treeSelectData.value = [];
     const CategoryParentLevel = ref();
@@ -137,7 +140,8 @@ export default defineComponent({
       blogQuery()
     };
 
-    const edit_Submit = () => {
+    const edit_Submit = (content:any) => {
+      record_blog.value.content=content
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
         console.log(record_blog.value)

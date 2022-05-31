@@ -18,6 +18,16 @@ public class BlogSaveReq {
 
     private Integer voteCount;
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    private String content;
+
     public Long getId() {
         return id;
     }
@@ -76,18 +86,15 @@ public class BlogSaveReq {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", category=").append(category);
-        sb.append(", description=").append(description);
-        sb.append(", cover=").append(cover);
-        sb.append(", viewCount=").append(viewCount);
-        sb.append(", voteCount=").append(voteCount);
-        sb.append("]");
-        return sb.toString();
+        return "BlogSaveReq{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", cover='" + cover + '\'' +
+                ", viewCount=" + viewCount +
+                ", voteCount=" + voteCount +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

@@ -86,7 +86,7 @@
                     style="width: 100%"
                     :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
                     :tree-data="treeSelectData"
-                    placeholder="Please enter blog Category"
+                    placeholder="Please select blog Category"
                     tree-default-expand-all
                     :replaceFields="{title: 'name', key: 'id', value: 'id'}"
                     :disabled="record_blog.id === 0"
