@@ -5,6 +5,9 @@ import store from './store'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import axios from 'axios';
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
+
 
 axios.defaults.baseURL = process.env.VUE_APP_API_HOST;
 
@@ -27,4 +30,4 @@ axios.interceptors.response.use(function (response) {
     return Promise.reject(error);
 });
 
-createApp(App).use(store).use(router).use(Antd).mount('#app');
+createApp(App).use(store).use(router).use(Antd).use(mavonEditor).mount('#app');

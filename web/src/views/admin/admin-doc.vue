@@ -3,6 +3,7 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
         style="padding: 78px 100px"
+
     >
 
 
@@ -10,84 +11,118 @@
         <a-col :span="21"/>
         <a-col :span="3">
           <a-space size="large">
-            <a-button size="large" style="margin-right: 10px" @click="edit_onClose">Cancel</a-button>
+            <a-button size="large" style="margin-right: 10px" @click="Total_onClose">Cancel</a-button>
 
-            <a-button size="large" type="primary" @click="edit_Submit">Submit</a-button>
+            <a-button size="large" type="primary" @click="Total_Submit">Submit</a-button>
           </a-space>
+        </a-col>
+      </a-row>
+
+      <a-row>
+        <a-col :span="24">
+          <a-form :model="record_blog" layout="vertical">
+            <a-row :gutter="16">
+              <a-col :span="24">
+                <a-form-item label="Name" name="Name">
+                  <a-input v-model:value="record_blog.name" placeholder="Please enter blog Name"/>
+                </a-form-item>
+              </a-col>
+            </a-row>
+
+            <a-row :gutter="16">
+              <a-col :span="24">
+                <a-form-item label="Cover">
+                  <a-input v-model:value="record_blog.cover" placeholder="Please enter blog Cover Url"/>
+                </a-form-item>
+              </a-col>
+            </a-row>
+
+            <a-row :gutter="16">
+              <a-col :span="24">
+                <a-form-item label="Category">
+                  <a-tree-select
+                      v-model:value="record_blog.category"
+                      style="width: 100%"
+                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto'}"
+                      :tree-data="treeSelectData"
+                      placeholder="Please enter blog Category"
+                      tree-default-expand-all
+                      :replaceFields="{title: 'name', key: 'id', value: 'id'}"
+                      :disabled="record_blog.id === 0"
+                  >
+                  </a-tree-select>
+                </a-form-item>
+              </a-col>
+            </a-row>
+
+            <a-row :gutter="16">
+              <a-col :span="24">
+                <a-form-item label="Description" >
+                  <a-textarea
+                      v-model:value="record_blog.description"
+                      :rows="4"
+                      placeholder="Please enter blog Description"
+                  />
+                </a-form-item>
+              </a-col>
+            </a-row>
+
+            <a-row :gutter="16">
+              <a-col :span="24">
+                <a-form-item label="Content" >
+                  <div id="editor">
+                    <mavon-editor v-model="mdContent"
+                                  ref=md @change="getMdHtml" />
+                  </div>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
         </a-col>
       </a-row>
 
 
 
-      <a-form :model="record_blog" layout="vertical">
-        <a-row :gutter="16">
-          <a-col :span="24">
-            <a-form-item label="Name" name="Name">
-              <a-input v-model:value="record_blog.name" placeholder="Please enter blog Name"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-
-        <a-row :gutter="16">
-          <a-col :span="24">
-            <a-form-item label="Cover">
-              <a-input v-model:value="record_blog.cover" placeholder="Please enter blog Cover Url"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-
-        <a-row :gutter="16">
-          <a-col :span="24">
-            <a-form-item label="Category">
-              <a-tree-select
-                  v-model:value="record_blog.category"
-                  style="width: 100%"
-                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-                  :tree-data="treeSelectData"
-                  placeholder="Please enter blog Category"
-                  tree-default-expand-all
-                  :replaceFields="{title: 'name', key: 'id', value: 'id'}"
-                  :disabled="record_blog.id === 0"
-              >
-              </a-tree-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-
-        <a-row :gutter="16">
-          <a-col :span="24">
-            <a-form-item label="Description">
-              <a-textarea
-                  v-model:value="record_blog.description"
-                  :rows="4"
-                  placeholder="Please enter blog Description"
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-
-      </a-form>
-
     </a-layout-content>
   </a-layout>
+
 </template>
 
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref} from 'vue';
 import {useRoute} from "vue-router";
 import axios from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 
+
 export default defineComponent({
   name: 'AdminDoc',
+  data() {
+    return {
+      mdContent: "",
+      htmlContent: ""
+    }
+  },
+  methods: {
+    //========================  Editor  ========================
+    getMdHtml(mdContent: any, htmlContent: string) {
+      this.htmlContent = htmlContent
+    },
+    Total_Submit(){
+      console.log(this.htmlContent)
+      this.edit_Submit()
+    },
+    Total_onClose(){
+      this.edit_onClose()
+      this.mdContent=""
+    },
+  },
   setup() {
 
     const route = useRoute()
-    console.log('route.query',route.query)
-    console.log(route.params)
     const blogs = ref();
     const record_blog = ref({});
     const treeSelectData = ref();
@@ -95,6 +130,27 @@ export default defineComponent({
     const CategoryParentLevel = ref();
     let categorys: any;
 
+
+//========================  Edit  ========================
+
+    const edit_onClose = () => {
+      blogQuery()
+    };
+
+    const edit_Submit = () => {
+      axios.post("/blog/save", record_blog.value).then((response) => {
+        const data = response.data;
+        console.log(record_blog.value)
+        if (data.success) {
+
+          // reload
+          blogQuery()
+          message.success("Submitted successfully")
+        }else {
+          message.error(data.message)
+        }
+      });
+    };
 
 //========================  setDisable ========================
 
@@ -142,6 +198,8 @@ export default defineComponent({
           setDisable(treeSelectData.value, route.query.blogId);
 
           treeSelectData.value.unshift({id: 0, name: 'None'});
+
+
         } else {
           message.error(data.message)
         }
@@ -175,10 +233,20 @@ export default defineComponent({
     return {
       blogs,
       record_blog,
-      treeSelectData
+      treeSelectData,
+      edit_Submit,
+      edit_onClose,
+
     }
 
-  }
+  },
+
 });
 </script>
 
+<style>
+#editor {
+  width: 100%;
+}
+.v-note-wrapper{ z-index:0 !important; }
+</style>
