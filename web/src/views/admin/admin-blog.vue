@@ -33,10 +33,11 @@
         </template>
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-            <a-button type="primary" @click="edit(record)">
-              Edit
-            </a-button>
-
+            <router-link :to="'/admin/doc?blogId='+record.id">
+              <a-button type="primary" @click="edit(record)">
+                Edit
+              </a-button>
+              </router-link>
             <a-popconfirm
                 title="Are you sure delete this Blog?"
                 ok-text="Yes"
@@ -229,9 +230,10 @@ export default defineComponent({
 
 
     const edit = (record:any) => {
+      console.log('record',record)
       edit_visible.value = true;
       record_blog.value = Tool.copy(record)
-
+      console.log('record_blog',record_blog)
       treeSelectData.value = Tool.copy(CategoryParentLevel.value);
       setDisable(treeSelectData.value, record.id);
 
@@ -391,13 +393,12 @@ export default defineComponent({
       columns,
       loading,
       edit_visible,
-      edit,
       add,
       onSearch,
       onDelete,
       treeSelectData,
       edit_onClose,
-      edit_Submit,
+      edit_Submit,edit,
       record_blog,
       getCategoryName,
     }

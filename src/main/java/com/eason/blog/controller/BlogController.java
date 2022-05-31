@@ -41,6 +41,12 @@ public class BlogController {
         return resp;
     }
 
-
+    @GetMapping("/list/{id}")
+    public CommonResp list(@PathVariable Long id) {
+        CommonResp resp = new CommonResp<>();
+        BlogQueryResp list =  blogService.list(id);
+        resp.setContent(list);
+        return resp;
+    }
 
 }

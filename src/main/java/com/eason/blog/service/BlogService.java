@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,7 +86,12 @@ public class BlogService {
     }
 
 
+    public BlogQueryResp list(Long id){
+        Blog blog = blogMapper.selectByPrimaryKey(id);
+        BlogQueryResp blogQueryResp = CopyUtil.copy(blog, BlogQueryResp.class);
 
+        return blogQueryResp;
+    }
 
 
 }
