@@ -104,7 +104,7 @@ export default defineComponent({
   name: 'AdminDoc',
   data() {
     return {
-      mdContent: "",
+      mdContent: this.contentQuery(),
       htmlContent: ""
     }
   },
@@ -115,14 +115,27 @@ export default defineComponent({
       this.mdContent = mdContent
     },
     Total_Submit(){
-      console.log('mdContent',this.mdContent)
-      console.log('htmlContent',this.htmlContent)
       this.edit_Submit(this.mdContent,this.htmlContent)
     },
     Total_onClose(){
       this.edit_onClose()
-      this.mdContent=""
+      this.mdContent=this.contentQuery()
     },
+    contentQuery (){
+      axios.get("/blog/find-content/"+this.$route.query.blogId).then((response) => {
+        const data = response.data;
+        if (data.success){
+          this.mdContent=data.content
+        } else {
+          message.error(data.message)
+        }
+      });
+    },
+  },
+  mounted() {
+    this.$nextTick(function () {
+      this.contentQuery()
+    })
   },
   setup() {
 
@@ -135,7 +148,6 @@ export default defineComponent({
     const CategoryParentLevel = ref();
     let categorys: any;
 
-
 //========================  Edit  ========================
 
     const edit_onClose = () => {
@@ -147,7 +159,6 @@ export default defineComponent({
       record_blog.value.htmlcontent=htmlContent
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
-        console.log(record_blog.value)
         if (data.success) {
 
           // reload
@@ -171,7 +182,6 @@ export default defineComponent({
         const node = treeSelectData[i];
         if (node.id === id) {
           // if the current node is the target node
-          console.log("disabled", node);
           // Set the target node to disabled
           node.disabled = true;
 
@@ -198,9 +208,7 @@ export default defineComponent({
         const data = response.data;
         if (data.success){
           blogs.value = data.content;
-          console.log('Data:',blogs.value)
           record_blog.value = Tool.copy(blogs.value)
-          console.log(record_blog)
           treeSelectData.value = Tool.copy(CategoryParentLevel.value);
           setDisable(treeSelectData.value, route.query.blogId);
 
@@ -234,7 +242,6 @@ export default defineComponent({
 
     onMounted(() => {
       categoryQuery()
-
     });
 
     return {
@@ -243,7 +250,6 @@ export default defineComponent({
       treeSelectData,
       edit_Submit,
       edit_onClose,
-
     }
 
   },
