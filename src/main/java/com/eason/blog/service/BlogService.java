@@ -109,13 +109,19 @@ public class BlogService {
 
     public String findmdContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
-
-        return content.getMdcontent();
+        if (ObjectUtils.isEmpty(content)) {
+            return "";
+        } else {
+            return content.getMdcontent();
+        }
     }
 
     public String findhtmlContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
-
-        return content.getHtmlcontent();
+        if (ObjectUtils.isEmpty(content)) {
+            return "";
+        } else {
+            return content.getHtmlcontent();
+        }
     }
 }
