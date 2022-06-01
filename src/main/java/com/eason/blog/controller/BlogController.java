@@ -49,10 +49,18 @@ public class BlogController {
         return resp;
     }
 
-    @GetMapping("/find-content/{id}")
-    public CommonResp findContent(@PathVariable Long id) {
+    @GetMapping("/find-mdContent/{id}")
+    public CommonResp findmdContent(@PathVariable Long id) {
         CommonResp<String> resp = new CommonResp<>();
-        String content =  blogService.findContent(id);
+        String content =  blogService.findmdContent(id);
+        resp.setContent(content);
+        return resp;
+    }
+
+    @GetMapping("/find-htmlContent/{id}")
+    public CommonResp findhtmlContent(@PathVariable Long id) {
+        CommonResp<String> resp = new CommonResp<>();
+        String content =  blogService.findhtmlContent(id);
         resp.setContent(content);
         return resp;
     }

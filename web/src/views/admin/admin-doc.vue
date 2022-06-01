@@ -104,7 +104,7 @@ export default defineComponent({
   name: 'AdminDoc',
   data() {
     return {
-      mdContent: this.contentQuery(),
+      mdContent: this.mdContentQuery(),
       htmlContent: ""
     }
   },
@@ -119,10 +119,10 @@ export default defineComponent({
     },
     Total_onClose(){
       this.edit_onClose()
-      this.mdContent=this.contentQuery()
+      this.mdContent=this.mdContentQuery()
     },
-    contentQuery (){
-      axios.get("/blog/find-content/"+this.$route.query.blogId).then((response) => {
+    mdContentQuery (){
+      axios.get("/blog/find-mdContent/"+this.$route.query.blogId).then((response) => {
         const data = response.data;
         if (data.success){
           this.mdContent=data.content
@@ -134,7 +134,7 @@ export default defineComponent({
   },
   mounted() {
     this.$nextTick(function () {
-      this.contentQuery()
+      this.mdContentQuery()
     })
   },
   setup() {

@@ -107,9 +107,15 @@ public class BlogService {
         return blogQueryResp;
     }
 
-    public String findContent(Long id){
+    public String findmdContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
 
         return content.getMdcontent();
+    }
+
+    public String findhtmlContent(Long id){
+        Content content = contentMapper.selectByPrimaryKey(id);
+
+        return content.getHtmlcontent();
     }
 }

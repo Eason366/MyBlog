@@ -42,7 +42,9 @@
             </template>
             <a-list-item-meta :description="item.description">
               <template #title>
-                <a :href="item.href" class="title">{{ item.name }}</a>
+                <router-link :to="'/doc?blogId=' + item.id">
+                  {{ item.name }}
+                </router-link>
               </template>
             </a-list-item-meta>
             {{ item.content }}

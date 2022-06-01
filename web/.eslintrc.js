@@ -19,5 +19,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any':'off',
     "@typescript-eslint/ban-types": ["error"],
     '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-non-null-assertion':'off',
   }
 }
