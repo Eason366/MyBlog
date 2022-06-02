@@ -1,8 +1,8 @@
 <template>
   <a-layout>
     <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
-        style="padding: 78px 100px"
+        :style="{ background: '#fff', padding: '0.24rem', margin: 0, minHeight: '2.80rem' }"
+        style="padding: 0.78rem 1.00rem"
 
     >
 
@@ -11,7 +11,7 @@
         <a-col :span="21"/>
         <a-col :span="3">
           <a-space size="large">
-            <a-button size="large" style="margin-right: 10px" @click="Total_onClose">Cancel</a-button>
+            <a-button size="large" style="margin-right: 0.10rem" @click="Total_onClose">Cancel</a-button>
 
             <a-button size="large" type="primary" @click="Total_Submit">Submit</a-button>
           </a-space>
@@ -43,7 +43,7 @@
                   <a-tree-select
                       v-model:value="record_blog.category"
                       style="width: 100%"
-                      :dropdown-style="{ maxHeight: '400px', overflow: 'auto'}"
+                      :dropdown-style="{ maxHeight: '4.00rem', overflow: 'auto'}"
                       :tree-data="treeSelectData"
                       placeholder="Please select blog Category"
                       tree-default-expand-all

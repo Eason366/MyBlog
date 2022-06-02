@@ -1,10 +1,10 @@
 <template>
-  <a-layout-header class="header" :style="{height:'64px', position: 'fixed', zIndex: 1, width: '100%'}">
-    <div class="logo"> Eason's Blog </div>
+  <a-layout-header class="header" :style="{height:'0.64rem', position: 'fixed', zIndex: 1, width: '100%'}">
+    <div class="logo" :style="{}"> Eason's Blog </div>
     <a-menu
         theme="dark"
         mode="horizontal"
-        :style="{ lineHeight: '64px' }"
+        :style="{ lineHeight: '0.64rem' }"
     >
       <a-menu-item key="/">
         <router-link to="/">Home</router-link>
@@ -32,11 +32,12 @@ export default defineComponent({
 
 <style>
 .logo {
-  width: 120px;
-  height: 31px;
+  width: 1.50rem;
+  height: 0.64rem;
   float: left;
   color: white;
-  font-size: 18px;
+  font-size: 0.2rem;
+  line-height: 0.64rem;
 }
 
 </style>

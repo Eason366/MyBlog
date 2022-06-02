@@ -7,6 +7,8 @@ import 'ant-design-vue/dist/antd.css';
 import axios from 'axios';
 import mavonEditor from 'mavon-editor';
 import 'mavon-editor/dist/css/index.css';
+import 'highlight.js/styles/googlecode.css';
+import './util/rem.js';
 
 
 axios.defaults.baseURL = process.env.VUE_APP_API_HOST;

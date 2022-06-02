@@ -1,16 +1,16 @@
 <template>
-  <a-layout style="padding: 64px; background: #fff">
+  <a-layout style="padding: 0.64rem; background: #fff">
     <a-layout-content>
-      <mavon-editor id="editor" class="markdown-body" innerHTML="" style="margin: 0px 260px 0px 260px">
+      <div class="editor" :innerHTML="html" style="margin: 0rem 2.60rem 0rem 2.60rem">
         <!--      {{html}}-->
-      </mavon-editor>
+      </div>
     </a-layout-content>
   </a-layout>
 </template>
 
 
 <script lang="ts">
-import { defineComponent, onMounted,} from 'vue';
+import { defineComponent, onMounted,ref} from 'vue';
 import axios from 'axios';
 import {message} from 'ant-design-vue';
 import {useRoute} from "vue-router";
@@ -18,7 +18,7 @@ import {useRoute} from "vue-router";
 export default defineComponent({
   name: 'Doc',
   data() {
-    const html = document.createElement("markdown-body")
+    const html = ref()
     return {
       html,
     }
@@ -29,8 +29,7 @@ export default defineComponent({
       axios.get("/blog/find-htmlContent/"+this.$route.query.blogId).then((response) => {
         const data = response.data;
         if (data.success){
-          this.html.innerHTML=data.content
-          document.getElementById("editor")!.appendChild(this.html);
+          this.html=data.content
           console.log(this.html)
         } else {
           message.error(data.message)
@@ -43,14 +42,6 @@ export default defineComponent({
       this.htmlContentQuery()
 
     })
-  },
-  unmounted(){
-    console.log("unmounted 被调用")
-    this.$nextTick(function () {
-      document.getElementById("editor")!.removeChild(this.html);
-    })
-    console.log("unmounted 调用完成")
-
   },
   setup() {
     const route = useRoute();
@@ -67,4 +58,64 @@ export default defineComponent({
 
 <style>
 .v-note-wrapper{ z-index:0 !important; }
+
+/* table 样式 */
+.editor table {
+  border-top: 0.01rem solid #ccc;
+  border-left: 0.01rem solid #ccc;
+}
+.editor table td,
+.editor table th {
+  border-bottom: 0.01rem solid #ccc;
+  border-right: 0.01rem solid #ccc;
+  padding: 0.03rem 0.05rem;
+}
+.editor table th {
+  border-bottom: 0.02rem solid #ccc;
+  text-align: center;
+}
+
+/* blockquote 样式 */
+.editor blockquote {
+  display: block;
+  border-left: 0.08rem solid #d0e5f2;
+  padding: 0.05rem 0.10rem;
+  margin: 0.10rem 0;
+  line-height: 1.4;
+  font-size: 100%;
+  background-color: #f1f1f1;
+}
+
+/* code 样式 */
+.editor code {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  background-color: #f1f1f1;
+  border-radius: 0.03rem;
+  padding: 0.03rem 0.05rem;
+  margin: 0 0.03rem;
+}
+.editor pre code {
+  display: block;
+}
+
+/* ul ol 样式 */
+.editor ul, ol {
+  margin: 0.10rem 0 0.10rem 0.20rem;
+}
+
+/* 和antdv p冲突，覆盖掉 */
+.editor blockquote p {
+  font-family:"YouYuan";
+  margin: 0.20rem 0.10rem !important;
+  font-size: 0.16rem !important;
+  font-weight:600;
+}
+
+.editor h1 {
+  font-size: 0.36rem;
+  line-height: 0.40rem;
+}
+
 </style>

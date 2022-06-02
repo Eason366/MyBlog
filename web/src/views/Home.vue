@@ -1,35 +1,35 @@
 <template>
-  <a-layout style="padding: 24px 0; background: #fff">
+  <a-layout style="padding: 0.24rem 0; background: #fff">
     <a-layout-sider width="240" style="background: #fff"
-                    :style="{margin: '64px 0 0', overflow: 'auto', position: 'fixed'}">
+                    :style="{margin: '0.64rem 0 0', overflow: 'auto', position: 'fixed'}">
 
       <a-input-search
           placeholder="input search text"
-          style="width: 230px"
+          style="width: 2.30rem"
           @search="onSearch"
-          :style="{margin: '0px 25px', overflow: 'auto', position: 'fixed'}"
+          :style="{margin: '0rem 0.25rem', overflow: 'auto', position: 'fixed'}"
       />
 
       <a-tree
           :tree-data="CategoryParentLevel"
           v-model:selectedKeys="selectedKeys"
-          :style="{margin: '50px 10px', overflow: 'auto', position: 'fixed'}"
+          :style="{margin: '0.50rem 0.10rem', overflow: 'auto', position: 'fixed'}"
           :replace-fields="{title: 'name', key:'id'}"
       >
       </a-tree>
 
 
     </a-layout-sider>
-    <a-layout-content :style="{ minHeight: '780px', margin: '24px 16px 0', overflow: 'initial' }">
+    <a-layout-content :style="{ minHeight: '7.80rem', margin: '0.24rem 0.16rem 0', overflow: 'initial' }">
 
       <a-list item-layout="vertical" size="large" :pagination="pagination"
               :data-source="blogs"
-              :style="{margin: '30px 240px 0 500px'}">
+              :style="{margin: '0.30rem 2.40rem 0 5.00rem'}">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
           <span >
-            <component :is= EyeOutlined style="margin-right: 8px" />
+            <component :is= EyeOutlined style="margin-right: 0.08rem" />
             {{ item.viewCount}}
           </span>
             </template>
@@ -234,13 +234,13 @@ export default defineComponent({
 
 <style>
 .title {
-  font-size: 24px;
+  font-size: 0.24rem;
 }
 .User {
-  width: 120px;
-  height: 31px;
+  width: 1.20rem;
+  height: 0.31rem;
   float: left;
   color: black;
-  font-size: 18px;
+  font-size: 0.18rem;
 }
 </style>

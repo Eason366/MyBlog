@@ -1,8 +1,8 @@
 <template>
   <a-layout>
     <a-layout-content
-        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
-        style="padding: 78px 100px"
+        :style="{ background: '#fff', padding: '0.24rem', margin: 0, minHeight: '2.80rem' }"
+        style="padding: 0.78rem 1.00rem"
     >
 
 
@@ -14,7 +14,7 @@
 
         <a-input-search
             placeholder="Input Name to Search"
-            style="width: 500px"
+            style="width: 5.00rem"
             size="large"
             enter-button="Search"
             @search="onSearch"
@@ -84,7 +84,7 @@
                 <a-tree-select
                     v-model:value="record_blog.category"
                     style="width: 100%"
-                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :dropdown-style="{ maxHeight: '4.00rem', overflow: 'auto' }"
                     :tree-data="treeSelectData"
                     placeholder="Please select blog Category"
                     tree-default-expand-all
@@ -116,14 +116,14 @@
                   right: 0,
                   bottom: 0,
                   width: '100%',
-                  borderTop: '1px solid #e9e9e9',
-                  padding: '10px 16px',
+                  borderTop: '0.01rem solid #e9e9e9',
+                  padding: '0.10rem 0.16rem',
                   background: '#fff',
                   textAlign: 'right',
                   zIndex: 1,
                 }"
         >
-          <a-button style="margin-right: 8px" @click="edit_onClose">Cancel</a-button>
+          <a-button style="margin-right: 0.08rem" @click="edit_onClose">Cancel</a-button>
           <a-button type="primary" @click="edit_Submit">Submit</a-button>
         </div>
       </a-drawer>
