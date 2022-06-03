@@ -60,7 +60,10 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="User Name" name="Name">
-                <a-input v-model:value="record_user.loginName" placeholder="Please enter blog Name"/>
+                <a-input v-model:value="record_user.loginName"
+                         placeholder="Please enter blog Name"
+                         :disabled="!!record_user.id"
+                />
               </a-form-item>
             </a-col>
           </a-row>

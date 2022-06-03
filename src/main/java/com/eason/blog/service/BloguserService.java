@@ -74,7 +74,8 @@ public class BloguserService {
 
         }else {
             //update
-            bloguserMapper.updateByPrimaryKey(bloguser);
+            bloguser.setLoginName(null);
+            bloguserMapper.updateByPrimaryKeySelective(bloguser);
         }
 
     }
