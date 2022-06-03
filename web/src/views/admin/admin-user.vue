@@ -30,6 +30,10 @@
       >
         <template v-slot:action="{ text, record }">
           <a-space size="small">
+            <a-button @click="reset(record)">
+              Reset Password
+            </a-button>
+
             <a-button type="primary" @click="edit(record)">
                 Edit
               </a-button>
@@ -62,7 +66,37 @@
               <a-form-item label="User Name" name="loginName">
                 <a-input v-model:value="record_user.loginName"
                          placeholder="Please enter Your User Name"
-                         :disabled="!!record_user.id"
+                         :disabled="true"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Nick Name" name="name">
+                <a-input v-model:value="record_user.name" placeholder="Please enter Your NickName"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+        </a-form>
+      </a-modal>
+
+      <a-modal
+          title="New User"
+          v-model:visible="new_visible"
+          ok-text="Submit"
+          cancel-text="Cancel"
+          @ok="new_Submit"
+      >
+
+        <a-form :model="record_user" layout="vertical" :rules="rules" ref="formRef">
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="User Name" name="loginName">
+                <a-input v-model:value="record_user.loginName"
+                         placeholder="Please enter Your User Name"
                 />
               </a-form-item>
             </a-col>
@@ -85,51 +119,11 @@
               </a-form-item>
             </a-col>
           </a-row>
-        </a-form>
-      </a-modal>
-
-      <a-modal
-          title="New User"
-          v-model:visible="new_visible"
-          ok-text="Submit"
-          cancel-text="Cancel"
-          @ok="new_Submit"
-      >
-
-        <a-form :model="new_user" layout="vertical" :rules="rules" ref="formRef">
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="User Name" name="loginName">
-                <a-input v-model:value="new_user.loginName"
-                         placeholder="Please enter Your User Name"
-                         :disabled="!!new_user.id"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="Nick Name" name="name">
-                <a-input v-model:value="new_user.name" placeholder="Please enter Your NickName"/>
-              </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="Password" name="password">
-                <a-input-password v-model:value="new_user.password"
-                                  show-count :maxlength="20"
-                                  placeholder="Please enter Your Password"/>
-              </a-form-item>
-            </a-col>
-          </a-row>
 
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Password Confirm" name="confirm">
-                <a-input-password v-model:value="new_user.confirm"
+                <a-input-password v-model:value="record_user.confirm"
                                   show-count :maxlength="20"
                                   placeholder="Please enter Your Password again"/>
               </a-form-item>
@@ -137,6 +131,39 @@
           </a-row>
         </a-form>
       </a-modal>
+
+      <a-modal
+          title="Reset Your Password"
+          v-model:visible="reset_visible"
+          ok-text="Submit"
+          cancel-text="Cancel"
+          @ok="edit_Submit"
+      >
+
+        <a-form :model="record_user" layout="vertical" :rules="rules" ref="formRef">
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Password" name="password">
+                <a-input-password v-model:value="record_user.password"
+                                  show-count :maxlength="20"
+                                  placeholder="Please enter New Password"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Password Confirm" name="confirm">
+                <a-input-password v-model:value="record_user.confirm"
+                                  show-count :maxlength="20"
+                                  placeholder="Please enter New Password again"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-modal>
+
     </a-layout-content>
   </a-layout>
 </template>
@@ -144,16 +171,19 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, UnwrapRef, reactive, toRaw} from 'vue';
+import { defineComponent, onMounted, ref, UnwrapRef, reactive} from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
-import { Tool } from '@/util/tool';
 import { RuleObject, ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
+declare let hexMd5: any;
+declare let KEY: any;
+
 interface FormState {
   loginName: string;
   name: string;
   password: string;
   confirm:string;
+  id:number|undefined;
 }
 
 export default defineComponent({
@@ -171,10 +201,6 @@ export default defineComponent({
         dataIndex: 'name',
       },
       {
-        title: 'Password',
-        dataIndex: 'password'
-      },
-      {
         title: 'Action',
         key: 'action',
         slots: { customRender: 'action' }
@@ -187,11 +213,12 @@ export default defineComponent({
     //========================  Rule  ========================
     const formRef = ref();
 
-    const new_user : UnwrapRef<FormState> = reactive({
+    const record_user : UnwrapRef<FormState> = reactive({
       loginName: '',
       name: '',
       password: '',
       confirm:'',
+      id:undefined,
     });
 
     let passwordValidator1 = async(rule: RuleObject, value: string) => {
@@ -212,7 +239,7 @@ export default defineComponent({
     }
 
     let confirmValidator = async(rule: RuleObject, value: string) => {
-      if (value !== new_user.password) {
+      if (value !== record_user.password) {
         return Promise.reject("Two inputs don't match!");
       } else {
         return Promise.resolve();
@@ -276,28 +303,48 @@ export default defineComponent({
     //========================  Model  ========================
     const edit_visible = ref<boolean>(false);
     const new_visible = ref<boolean>(false);
-    const record_user = ref({});
+    const reset_visible = ref<boolean>(false);
 
 
     const edit = (record:any) => {
       console.log('record',record)
+
+      record_user.loginName = record.loginName
+      record_user.name = record.name
+      record_user.id = record.id
+      record_user.password = record.password
+      record_user.confirm = record.password
+
       edit_visible.value = true;
-      record_user.value = Tool.copy(record)
       console.log('record_user',record_user)
-      
     };
 
+    const reset = (record:any) => {
+      console.log('record',record)
+
+      record_user.loginName = record.loginName
+      record_user.name = record.name
+      record_user.id = record.id
+      record_user.password = ''
+      record_user.confirm = ''
+
+      reset_visible.value = true;
+      console.log('record_user',record_user)
+
+    };
 
 
     const edit_Submit = () => {
       formRef.value
           .validate().then(() => {
-        console.log('values', new_user, toRaw(new_user));
-        axios.post("/user/save", record_user.value).then((response) => {
+        console.log('record_user',record_user)
+        record_user.password=hexMd5(record_user.password + KEY);
+        axios.post("/user/save", record_user).then((response) => {
           const data = response.data;
-          console.log(record_user.value)
+          console.log(record_user)
           if (data.success) {
             edit_visible.value = false;
+            reset_visible.value = false;
 
             // reload
             userQuery({
@@ -316,19 +363,23 @@ export default defineComponent({
 
     };
     const add = () => {
+      record_user.loginName = ''
+      record_user.name = ''
+      record_user.password = ''
+      record_user.confirm = ''
+
       new_visible.value = true;
-      formRef.value.resetFields();
     };
 
     const new_Submit = () => {
       formRef.value
           .validate().then(() => {
-        console.log('values', new_user, toRaw(new_user));
-        axios.post("/user/save", new_user).then((response) => {
+        record_user.password= hexMd5(record_user.password + KEY);
+        axios.post("/user/save", record_user).then((response) => {
           const data = response.data;
-          console.log(record_user.value)
+          console.log(record_user)
           if (data.success) {
-            edit_visible.value = false;
+            new_visible.value = false;
 
             // reload
             userQuery({
@@ -414,6 +465,7 @@ export default defineComponent({
       loading,
       edit_visible,
       new_visible,
+      reset_visible,
       rules,
       add,
       onSearch,
@@ -421,8 +473,8 @@ export default defineComponent({
       edit_Submit,
       new_Submit,
       edit,
+      reset,
       record_user,
-      new_user,
     }
   }
 });
