@@ -42,6 +42,7 @@
 
 <!--        <table tableName="blog" domainObjectName="Blog"/>-->
 <!--        <table tableName="blog"/>-->
-        <table tableName="content"/>
+<!--        <table tableName="content"/>-->
+        <table tableName="bloguser"/>
     </context>
 </generatorConfiguration>

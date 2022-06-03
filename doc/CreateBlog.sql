@@ -49,3 +49,13 @@ create table `content` (
     primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='blogContent';
 
+-- User
+drop table if exists `BlogUser`;
+create table `BlogUser` (
+    `id` bigint not null comment 'ID',
+    `login_name` varchar(50) not null comment 'login_name',
+    `name` varchar(50) comment 'name',
+    `password` char(32) not null comment 'password',
+    primary key (`id`),
+    unique key `login_name_unique` (`login_name`)
+) engine=innodb default charset=utf8mb4 comment='BlogUser';
