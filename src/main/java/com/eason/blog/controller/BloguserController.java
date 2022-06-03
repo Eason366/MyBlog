@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bloguser")
+@RequestMapping("/user")
 public class BloguserController {
 
     @Resource

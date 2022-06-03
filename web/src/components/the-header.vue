@@ -9,6 +9,9 @@
       <a-menu-item key="/">
         <router-link to="/">Home</router-link>
       </a-menu-item>
+      <a-menu-item key="/admin/user">
+        <router-link to="/admin/user">Admin User</router-link>
+      </a-menu-item>
       <a-menu-item key="/admin/blog">
         <router-link to="/admin/blog">Admin Blog</router-link>
       </a-menu-item>
@@ -18,6 +21,7 @@
       <a-menu-item key="/about">
         <router-link to="/about">About</router-link>
       </a-menu-item>
+
     </a-menu>
   </a-layout-header>
 </template>

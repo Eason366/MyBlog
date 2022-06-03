@@ -32,7 +32,6 @@ public class BloguserService {
 
     public PageResp<BloguserQueryResp> list(BloguserQueryReq req){
         BloguserExample bloguserExample = new BloguserExample();
-        bloguserExample.setOrderByClause("sort asc");
         BloguserExample.Criteria criteria = bloguserExample.createCriteria();
 
         if (!ObjectUtils.isEmpty(req.getLoginName())) {
