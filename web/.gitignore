@@ -2,7 +2,7 @@
 node_modules
 /dist
 vue.config.js
-
+public/js/md5.js
 # local env files
 .env.local
 .env.*.local
