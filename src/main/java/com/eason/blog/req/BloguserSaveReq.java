@@ -1,19 +1,12 @@
 package com.eason.blog.req;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
 public class BloguserSaveReq {
     private Long id;
 
-    @NotNull(message = "User name cannot be null")
     private String loginName;
 
-    @NotNull(message = "Nickname cannot be null")
     private String name;
 
-    @NotNull(message = "password cannot be null")
-    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$", message = "Password contains at least numbers and English, length 6-20")
     private String password;
 
     public Long getId() {

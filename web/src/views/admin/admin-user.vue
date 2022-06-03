@@ -30,7 +30,7 @@
       >
         <template v-slot:action="{ text, record }">
           <a-space size="small">
-              <a-button type="primary" @click="edit(record)">
+            <a-button type="primary" @click="edit(record)">
                 Edit
               </a-button>
             <a-popconfirm
@@ -48,20 +48,20 @@
           </a-space>
         </template>
       </a-table>
-      <a-drawer
-          :width="500"
-          title="Basic Drawer"
-          placement="left"
-          :visible="edit_visible"
-          @close="edit_onClose"
+      <a-modal
+          title="Update Your Info"
+          v-model:visible="edit_visible"
+          ok-text="Submit"
+          cancel-text="Cancel"
+          @ok="edit_Submit"
       >
 
-        <a-form :model="record_user" layout="vertical">
+        <a-form :model="record_user" layout="vertical" :rules="rules" ref="formRef">
           <a-row :gutter="16">
             <a-col :span="24">
-              <a-form-item label="User Name" name="Name">
+              <a-form-item label="User Name" name="loginName">
                 <a-input v-model:value="record_user.loginName"
-                         placeholder="Please enter blog Name"
+                         placeholder="Please enter Your User Name"
                          :disabled="!!record_user.id"
                 />
               </a-form-item>
@@ -70,39 +70,73 @@
 
           <a-row :gutter="16">
             <a-col :span="24">
-              <a-form-item label="Nick Name">
-                <a-input v-model:value="record_user.name" placeholder="Please enter blog Cover Url"/>
+              <a-form-item label="Nick Name" name="name">
+                <a-input v-model:value="record_user.name" placeholder="Please enter Your NickName"/>
               </a-form-item>
             </a-col>
           </a-row>
 
           <a-row :gutter="16">
             <a-col :span="24">
-              <a-form-item label="Password">
-                <a-input v-model:value="record_user.password" placeholder="Please enter blog Cover Url"/>
+              <a-form-item label="Password" name="password">
+                <a-input-password v-model:value="record_user.password"
+                                  show-count :maxlength="20"
+                                  placeholder="Please enter Your Password"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
+      </a-modal>
+
+      <a-modal
+          title="New User"
+          v-model:visible="new_visible"
+          ok-text="Submit"
+          cancel-text="Cancel"
+          @ok="new_Submit"
+      >
+
+        <a-form :model="new_user" layout="vertical" :rules="rules" ref="formRef">
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="User Name" name="loginName">
+                <a-input v-model:value="new_user.loginName"
+                         placeholder="Please enter Your User Name"
+                         :disabled="!!new_user.id"
+                />
               </a-form-item>
             </a-col>
           </a-row>
 
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Nick Name" name="name">
+                <a-input v-model:value="new_user.name" placeholder="Please enter Your NickName"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
 
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Password" name="password">
+                <a-input-password v-model:value="new_user.password"
+                                  show-count :maxlength="20"
+                                  placeholder="Please enter Your Password"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
+
+          <a-row :gutter="16">
+            <a-col :span="24">
+              <a-form-item label="Password Confirm" name="confirm">
+                <a-input-password v-model:value="new_user.confirm"
+                                  show-count :maxlength="20"
+                                  placeholder="Please enter Your Password again"/>
+              </a-form-item>
+            </a-col>
+          </a-row>
         </a-form>
-        <div
-            :style="{
-                  position: 'absolute',
-                  right: 0,
-                  bottom: 0,
-                  width: '100%',
-                  borderTop: '0.01rem solid #e9e9e9',
-                  padding: '0.10rem 0.16rem',
-                  background: '#fff',
-                  textAlign: 'right',
-                  zIndex: 1,
-                }"
-        >
-          <a-button style="margin-right: 0.08rem" @click="edit_onClose">Cancel</a-button>
-          <a-button type="primary" @click="edit_Submit">Submit</a-button>
-        </div>
-      </a-drawer>
+      </a-modal>
     </a-layout-content>
   </a-layout>
 </template>
@@ -110,13 +144,20 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, UnwrapRef, reactive, toRaw} from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
 import { Tool } from '@/util/tool';
+import { RuleObject, ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
+interface FormState {
+  loginName: string;
+  name: string;
+  password: string;
+  confirm:string;
+}
 
 export default defineComponent({
-  name: 'AdminEbook',
+  name: 'AdminUser',
   setup() {
     const loading = ref(false);
 
@@ -139,12 +180,69 @@ export default defineComponent({
         slots: { customRender: 'action' }
       }
     ];
-    
 
 
     const pageSize = 10;
     const users=ref();
+    //========================  Rule  ========================
+    const formRef = ref();
 
+    const new_user : UnwrapRef<FormState> = reactive({
+      loginName: '',
+      name: '',
+      password: '',
+      confirm:'',
+    });
+
+    let passwordValidator1 = async(rule: RuleObject, value: string) => {
+      if (value && value.indexOf(' ') === -1) {
+        return Promise.resolve()
+      } else {
+        return Promise.reject('Please enter characters without spaces')
+      }
+    }
+
+    let passwordValidator2 = async(rule: RuleObject, value: string) => {
+      let passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,20}/
+      if (!passwordreg.test(value)) {
+        return Promise.reject('Password must be a combination of numbers, letters and special characters, please enter 6-20 digits')
+      }else{
+        return Promise.resolve()
+      }
+    }
+
+    let confirmValidator = async(rule: RuleObject, value: string) => {
+      if (value !== new_user.password) {
+        return Promise.reject("Two inputs don't match!");
+      } else {
+        return Promise.resolve();
+      }
+    }
+
+
+    const rules = {
+      loginName:[ { required: true, message: 'Please enter Your User Name', trigger: ['change', 'blur'] }],
+      name:[ { required: true, message: 'Please enter Your Nick Name', trigger: ['change', 'blur'] }],
+      password: [
+        { required: true, message: 'Please enter Your Password', trigger: ['change', 'blur'] },
+        {
+          type: 'string',
+          trigger: ['change', 'blur'],
+          validator: passwordValidator1,
+        },
+        {
+          trigger: ['change', 'blur'],
+          validator: passwordValidator2, }
+      ],
+      confirm:[
+        { required: true, message: 'Please enter Your Password again', trigger: ['change', 'blur'] },
+        {
+          validator: confirmValidator,
+          trigger: ['change', 'blur']
+        }
+      ],
+
+    }
 
     const pagination = ref({
       onChange: (page: number) => {
@@ -175,8 +273,9 @@ export default defineComponent({
     };
 
 
-    //========================  Drawer  ========================
+    //========================  Model  ========================
     const edit_visible = ref<boolean>(false);
+    const new_visible = ref<boolean>(false);
     const record_user = ref({});
 
 
@@ -188,35 +287,64 @@ export default defineComponent({
       
     };
 
-    const add = () => {
-      edit_visible.value = true;
-      record_user.value = {};
-    };
 
-    const edit_onClose = () => {
-      edit_visible.value = false;
-      userQuery({
-        page:pagination.value.current,
-        size:pagination.value.pageSize,
-      })
-    };
 
     const edit_Submit = () => {
-      axios.post("/user/save", record_user.value).then((response) => {
-        const data = response.data;
-        console.log(record_user.value)
-        if (data.success) {
-          edit_visible.value = false;
+      formRef.value
+          .validate().then(() => {
+        console.log('values', new_user, toRaw(new_user));
+        axios.post("/user/save", record_user.value).then((response) => {
+          const data = response.data;
+          console.log(record_user.value)
+          if (data.success) {
+            edit_visible.value = false;
 
-          // reload
-          userQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          })
-        }else {
-          message.error(data.message)
-        }
-      });
+            // reload
+            userQuery({
+              page:pagination.value.current,
+              size:pagination.value.pageSize,
+            })
+          }else {
+            message.error(data.message)
+          }
+        });
+      })
+          .catch((error: ValidateErrorEntity<FormState>) => {
+            console.log('error', error);
+          });
+
+
+    };
+    const add = () => {
+      new_visible.value = true;
+      formRef.value.resetFields();
+    };
+
+    const new_Submit = () => {
+      formRef.value
+          .validate().then(() => {
+        console.log('values', new_user, toRaw(new_user));
+        axios.post("/user/save", new_user).then((response) => {
+          const data = response.data;
+          console.log(record_user.value)
+          if (data.success) {
+            edit_visible.value = false;
+
+            // reload
+            userQuery({
+              page:pagination.value.current,
+              size:pagination.value.pageSize,
+            })
+          }else {
+            message.error(data.message)
+          }
+        });
+      })
+          .catch((error: ValidateErrorEntity<FormState>) => {
+            console.log('error', error);
+          });
+
+
     };
     
     //========================  Query ========================
@@ -279,17 +407,22 @@ export default defineComponent({
     });
 
     return {
+      formRef,
       users,
       pagination,
       columns,
       loading,
       edit_visible,
+      new_visible,
+      rules,
       add,
       onSearch,
       onDelete,
-      edit_onClose,
-      edit_Submit,edit,
+      edit_Submit,
+      new_Submit,
+      edit,
       record_user,
+      new_user,
     }
   }
 });
