@@ -2,6 +2,8 @@ package com.eason.blog.service;
 
 import com.eason.blog.domain.Bloguser;
 import com.eason.blog.domain.BloguserExample;
+import com.eason.blog.exception.BusinessException;
+import com.eason.blog.exception.BusinessExceptionCode;
 import com.eason.blog.mapper.BloguserMapper;
 import com.eason.blog.req.BloguserQueryReq;
 import com.eason.blog.req.BloguserSaveReq;
@@ -14,6 +16,7 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -59,9 +62,16 @@ public class BloguserService {
     public void save(BloguserSaveReq req){
         Bloguser bloguser = CopyUtil.copy(req,Bloguser.class);
         if (ObjectUtils.isEmpty(req.getId())){
-            // insert
-            bloguser.setId(snowFlake.nextId());
-            bloguserMapper.insert(bloguser);
+            if (ObjectUtils.isEmpty(selectByLoginName(req.getLoginName()))) {
+                // insert
+                bloguser.setId(snowFlake.nextId());
+                bloguserMapper.insert(bloguser);
+            }else {
+                //UserName exist
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
+            }
+
+
         }else {
             //update
             bloguserMapper.updateByPrimaryKey(bloguser);
@@ -83,5 +93,17 @@ public class BloguserService {
         List<BloguserQueryResp> list = CopyUtil.copyList(bloguserList, BloguserQueryResp.class);
 
         return list;
+    }
+
+    public Bloguser selectByLoginName(String LoginName){
+        BloguserExample bloguserExample = new BloguserExample();
+        BloguserExample.Criteria criteria = bloguserExample.createCriteria();
+        criteria.andLoginNameEqualTo(LoginName);
+        List<Bloguser> blogusersList = bloguserMapper.selectByExample(bloguserExample);
+        if (CollectionUtils.isEmpty(blogusersList)) {
+            return null;
+        } else {
+            return blogusersList.get(0);
+        }
     }
 }

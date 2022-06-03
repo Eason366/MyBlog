@@ -1,5 +1,6 @@
 package com.eason.blog.controller;
 
+import com.eason.blog.exception.BusinessException;
 import com.eason.blog.resp.CommonResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,37 @@ public class ControllerExceptionHandler {
         LOG.warn("Parameter Validation Failed: {}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         commonResp.setSuccess(false);
         commonResp.setMessage(e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        return commonResp;
+    }
+
+
+    /**
+     * Unified processing of verification exceptions
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = BusinessException.class)
+    @ResponseBody
+    public CommonResp validExceptionHandler(BusinessException e) {
+        CommonResp commonResp = new CommonResp();
+        LOG.warn("Business Exception：{}", e.getCode().getDesc());
+        commonResp.setSuccess(false);
+        commonResp.setMessage(e.getCode().getDesc());
+        return commonResp;
+    }
+
+    /**
+     * Unified processing of verification exceptions
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = Exception.class)
+    @ResponseBody
+    public CommonResp validExceptionHandler(Exception e) {
+        CommonResp commonResp = new CommonResp();
+        LOG.error("System Exception：", e);
+        commonResp.setSuccess(false);
+        commonResp.setMessage("The system is abnormal, please contact the administrator");
         return commonResp;
     }
 }
