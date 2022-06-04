@@ -22,8 +22,8 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/MyBlog?serverTimezone=UTC"
-                        userId="root"
+                        connectionURL="jdbc:mysql://myblog.cpkz2eyrsxqn.us-east-2.rds.amazonaws.com :3306/myblog?serverTimezone=UTC"
+                        userId="admin"
                         password="wyc200418">
         </jdbcConnection>
 
