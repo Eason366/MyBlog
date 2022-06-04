@@ -78,7 +78,6 @@ export default defineComponent({
 
 
     const login = () => {
-      console.log("开始登录")
       loginModalLoading.value = true;
       loginUser.value.password = hexMd5(loginUser.value.password + KEY);
       axios.post('/user/Login', loginUser.value).then((response) => {
@@ -86,7 +85,7 @@ export default defineComponent({
         const data = response.data;
         if (data.success) {
           loginModalVisible.value = false;
-          message.success("登录成功！");
+          message.success("Login Successful！");
           loginUser.value.loginName='';
           loginUser.value.password='';
         } else {
