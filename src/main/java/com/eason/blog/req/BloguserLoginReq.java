@@ -1,9 +1,13 @@
 package com.eason.blog.req;
 
+import javax.validation.constraints.NotEmpty;
+
 public class BloguserLoginReq {
 
+    @NotEmpty(message = "Username can not be empty")
     private String loginName;
 
+    @NotEmpty(message = "Password can not be empty")
     private String password;
 
     public String getLoginName() {
