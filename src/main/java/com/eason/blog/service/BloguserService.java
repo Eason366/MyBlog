@@ -5,8 +5,10 @@ import com.eason.blog.domain.BloguserExample;
 import com.eason.blog.exception.BusinessException;
 import com.eason.blog.exception.BusinessExceptionCode;
 import com.eason.blog.mapper.BloguserMapper;
+import com.eason.blog.req.BloguserLoginReq;
 import com.eason.blog.req.BloguserQueryReq;
 import com.eason.blog.req.BloguserSaveReq;
+import com.eason.blog.resp.BloguserLoginResp;
 import com.eason.blog.resp.BloguserQueryResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
@@ -105,6 +107,25 @@ public class BloguserService {
             return null;
         } else {
             return blogusersList.get(0);
+        }
+    }
+
+    public BloguserLoginResp login(BloguserLoginReq req){
+        Bloguser bloguser = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(bloguser)){
+            // User not exist
+            LOG.info("User not exist, {}", req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        }else {
+            if (bloguser.getPassword().equals(req.getPassword())){
+                //Login success
+                BloguserLoginResp bloguserLoginResp = CopyUtil.copy(bloguser,BloguserLoginResp.class);
+                return bloguserLoginResp;
+            }else {
+                // password wrong
+                LOG.info("password wrong, Input：{}, Database：{}", req.getPassword(), bloguser.getPassword());
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.eason.blog.controller;
 
 
+import com.eason.blog.req.BloguserLoginReq;
 import com.eason.blog.req.BloguserQueryReq;
 import com.eason.blog.req.BloguserSaveReq;
+import com.eason.blog.resp.BloguserLoginResp;
 import com.eason.blog.resp.BloguserQueryResp;
 import com.eason.blog.resp.CommonResp;
 import com.eason.blog.resp.PageResp;
@@ -52,5 +54,12 @@ public class BloguserController {
         return resp;
     }
 
+    @PostMapping("/Login")
+    public CommonResp Login(@Valid @RequestBody BloguserLoginReq req) {
+        CommonResp<BloguserLoginResp> resp = new CommonResp<>();
+        BloguserLoginResp bloguserLoginResp = bloguserService.login(req);
+        resp.setContent(bloguserLoginResp);
+        return resp;
+    }
 
 }
