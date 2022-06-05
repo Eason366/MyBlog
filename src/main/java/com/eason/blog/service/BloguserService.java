@@ -128,4 +128,17 @@ public class BloguserService {
             }
         }
     }
+
+    public String getName(String login_name) {
+        BloguserExample bloguserExample = new BloguserExample();
+        BloguserExample.Criteria criteria = bloguserExample.createCriteria();
+        criteria.andLoginNameEqualTo(login_name);
+
+        List<Bloguser> bloguserList = bloguserMapper.selectByExample(bloguserExample);
+        if (ObjectUtils.isEmpty(bloguserList)){
+            return "";
+        }else {
+            return bloguserList.get(0).getName();
+        }
+    }
 }

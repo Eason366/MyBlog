@@ -91,4 +91,9 @@ public class BloguserController {
         return resp;
     }
 
+    @GetMapping("/getName/{login_name}")
+    public String getName(@PathVariable String login_name) {
+        return bloguserService.getName(login_name);
+    }
+
 }
