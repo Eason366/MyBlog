@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import store from "@/store";
+import {Tool} from "@/util/tool";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -17,17 +19,26 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/blog',
     name: 'AdminBlog',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-blog.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-blog.vue'),
+    meta: {
+      loginRequire: true
+    }
   },
   {
     path: '/admin/category',
     name: 'AdminCategory',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-category.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-category.vue'),
+    meta: {
+      loginRequire: true
+    }
   },
   {
     path: '/admin/doc',
     name: 'AdminDoc',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-doc.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-doc.vue'),
+    meta: {
+      loginRequire: true
+    }
   },
   {
     path: '/doc',
@@ -37,7 +48,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/user',
     name: 'AdminUser',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-user.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-user.vue'),
+    meta: {
+      loginRequire: true
+    }
   }
 ]
 
@@ -45,5 +59,24 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+// 路由登录拦截
+router.beforeEach((to, from, next) => {
+  // 要不要对meta.loginRequire属性做监控拦截
+  if (to.matched.some(function (item) {
+    console.log(item, "是否需要登录校验：", item.meta.loginRequire);
+    return item.meta.loginRequire
+  })) {
+    const loginUser = store.state.user;
+    if (Tool.isEmpty(loginUser)) {
+      console.log("用户未登录！");
+      next('/');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router
