@@ -3,15 +3,21 @@
     <div class="logo" :style="{}"> Eason's Blog </div>
     <a-space class="login-menu" :size=30>
 
-      <a class="login-sign" @click="showLoginModal">
+      <a class="login-sign" v-show="!user.id" @click="showLoginModal">
         <span>Login</span>
       </a>
 
-      <a class="login-sign" @click="showSignModal">
+      <a class="login-sign" v-show="!user.id" @click="showSignModal">
         <span>Sign in</span>
       </a>
 
+      <a class="login-sign" v-show="user.id">
+        <span>您好：{{user.name}}</span>
+      </a>
+
     </a-space>
+
+
 
     <a-menu
         theme="dark"
@@ -109,10 +115,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref, UnwrapRef} from 'vue';
+import {defineComponent, reactive, ref, UnwrapRef, computed} from 'vue';
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 import {RuleObject, ValidateErrorEntity} from "ant-design-vue/es/form/interface";
+import store from "@/store";
+
 interface FormState {
   loginName: string;
   name: string;
@@ -130,6 +138,8 @@ export default defineComponent({
     const loginModalVisible = ref(false);
     const loginModalLoading = ref(false);
     const signModalVisible = ref<boolean>(false);
+    const user = computed(() => store.state.user);
+
 
     //========================  Sign in  ========================
 
@@ -196,6 +206,7 @@ export default defineComponent({
         if (data.success) {
           loginModalVisible.value = false;
           message.success("Login Successful！");
+          store.commit("setUser", data.content);
           loginUser.value.loginName='';
           loginUser.value.password='';
         } else {
@@ -274,7 +285,8 @@ export default defineComponent({
       loginModalLoading,
       showLoginModal,
       loginUser,
-      login
+      login,
+      user,
     }
   }
 });
