@@ -55,7 +55,7 @@
       </a-table>
       <a-drawer
           :width="500"
-          title="Basic Drawer"
+          title="Add a new Blog"
           placement="left"
           :visible="edit_visible"
           @close="edit_onClose"
@@ -134,15 +134,17 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref,computed } from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
+import store from "@/store";
 import { Tool } from '@/util/tool';
 
 export default defineComponent({
   name: 'AdminEbook',
   setup() {
     const loading = ref(false);
+    const user = computed(() => store.state.user);
 
     const columns = [
       {
@@ -226,8 +228,8 @@ export default defineComponent({
 
     //========================  Drawer  ========================
     const edit_visible = ref<boolean>(false);
-    const record_blog = ref({});
-
+    const record_blog = ref();
+    record_blog.value = {}
 
     const edit = (record:any) => {
       console.log('record',record)
@@ -257,6 +259,7 @@ export default defineComponent({
     };
 
     const edit_Submit = () => {
+      record_blog.value.user = user.value.loginName
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
         console.log(record_blog.value)
