@@ -284,8 +284,13 @@ export default defineComponent({
       formRef.value
           .validate().then(() => {
         console.log('record_user',record_user)
-        record_user.password=hexMd5(record_user.password + KEY);
-        axios.post("/user/save", record_user).then((response) => {
+        const tempUser = ref({
+          id:record_user.id,
+          name:record_user.name,
+          loginName:record_user.loginName,
+          password:hexMd5(record_user.password + KEY),
+        })
+        axios.post("/user/save", tempUser.value).then((response) => {
           const data = response.data;
           console.log(record_user)
           if (data.success) {

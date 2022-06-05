@@ -34,18 +34,19 @@
       <a-menu-item key="/">
         <router-link to="/">Home</router-link>
       </a-menu-item>
-      <a-menu-item key="/admin/user">
-        <router-link to="/admin/user">Admin User</router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin/blog">
-        <router-link to="/admin/blog">Admin Blog</router-link>
-      </a-menu-item>
-      <a-menu-item key="/admin/category">
-        <router-link to="/admin/category">Admin Category</router-link>
-      </a-menu-item>
       <a-menu-item key="/about">
         <router-link to="/about">About</router-link>
       </a-menu-item>
+      <a-menu-item key="/admin/user" :style="user.id? {} : {display:'none'}">
+        <router-link to="/admin/user">Admin User</router-link>
+      </a-menu-item>
+      <a-menu-item key="/admin/blog" :style="user.id? {} : {display:'none'}">
+        <router-link to="/admin/blog">Admin Blog</router-link>
+      </a-menu-item>
+      <a-menu-item key="/admin/category" :style="user.id? {} : {display:'none'}">
+        <router-link to="/admin/category">Admin Category</router-link>
+      </a-menu-item>
+
 
     </a-menu>
 
@@ -206,8 +207,12 @@ export default defineComponent({
 
     const login = () => {
       loginModalLoading.value = true;
-      loginUser.value.password = hexMd5(loginUser.value.password + KEY);
-      axios.post('/user/Login', loginUser.value).then((response) => {
+      const tempUser = ref({
+        password:hexMd5(loginUser.value.password + KEY),
+        loginName:loginUser.value.loginName,
+      })
+      console.log(loginUser.value)
+      axios.post('/user/Login', tempUser.value).then((response) => {
         loginModalLoading.value = false;
         const data = response.data;
         if (data.success) {
