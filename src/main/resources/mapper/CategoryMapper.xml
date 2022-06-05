@@ -6,7 +6,7 @@
     <result column="parent" jdbcType="BIGINT" property="parent" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
-    <result column="user" jdbcType="BIGINT" property="user" />
+    <result column="user" jdbcType="VARCHAR" property="user" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -103,7 +103,7 @@
     insert into category (id, parent, `name`, 
       sort, `user`)
     values (#{id,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{sort,jdbcType=INTEGER}, #{user,jdbcType=BIGINT})
+      #{sort,jdbcType=INTEGER}, #{user,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.eason.blog.domain.Category">
     insert into category
@@ -138,7 +138,7 @@
         #{sort,jdbcType=INTEGER},
       </if>
       <if test="user != null">
-        #{user,jdbcType=BIGINT},
+        #{user,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -164,7 +164,7 @@
         sort = #{record.sort,jdbcType=INTEGER},
       </if>
       <if test="record.user != null">
-        `user` = #{record.user,jdbcType=BIGINT},
+        `user` = #{record.user,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -177,7 +177,7 @@
       parent = #{record.parent,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
       sort = #{record.sort,jdbcType=INTEGER},
-      `user` = #{record.user,jdbcType=BIGINT}
+      `user` = #{record.user,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -195,7 +195,7 @@
         sort = #{sort,jdbcType=INTEGER},
       </if>
       <if test="user != null">
-        `user` = #{user,jdbcType=BIGINT},
+        `user` = #{user,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -205,7 +205,7 @@
     set parent = #{parent,jdbcType=BIGINT},
       `name` = #{name,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER},
-      `user` = #{user,jdbcType=BIGINT}
+      `user` = #{user,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

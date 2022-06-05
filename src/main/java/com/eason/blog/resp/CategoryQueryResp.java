@@ -9,7 +9,7 @@ public class CategoryQueryResp {
 
     private Integer sort;
 
-    private Long user;
+    private String user;
 
     public Long getId() {
         return id;
@@ -43,11 +43,11 @@ public class CategoryQueryResp {
         this.sort = sort;
     }
 
-    public Long getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
@@ -58,7 +58,7 @@ public class CategoryQueryResp {
                 ", parent=" + parent +
                 ", name='" + name + '\'' +
                 ", sort=" + sort +
-                ", user=" + user +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

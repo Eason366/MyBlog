@@ -15,7 +15,7 @@ public class BlogQueryResp {
 
     private Integer voteCount;
 
-    private Long user;
+    private String user;
 
     public Long getId() {
         return id;
@@ -73,11 +73,11 @@ public class BlogQueryResp {
         this.voteCount = voteCount;
     }
 
-    public Long getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
@@ -91,7 +91,7 @@ public class BlogQueryResp {
                 ", cover='" + cover + '\'' +
                 ", viewCount=" + viewCount +
                 ", voteCount=" + voteCount +
-                ", user=" + user +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

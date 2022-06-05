@@ -22,7 +22,7 @@ public class BlogSaveReq {
 
     private String htmlcontent;
 
-    private Long user;
+    private String user;
 
     public Long getId() {
         return id;
@@ -96,11 +96,11 @@ public class BlogSaveReq {
         this.htmlcontent = htmlcontent;
     }
 
-    public Long getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
@@ -116,7 +116,7 @@ public class BlogSaveReq {
                 ", voteCount=" + voteCount +
                 ", mdcontent='" + mdcontent + '\'' +
                 ", htmlcontent='" + htmlcontent + '\'' +
-                ", user=" + user +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

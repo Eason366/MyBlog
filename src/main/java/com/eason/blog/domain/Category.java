@@ -9,7 +9,7 @@ public class Category {
 
     private Integer sort;
 
-    private Long user;
+    private String user;
 
     public Long getId() {
         return id;
@@ -43,11 +43,11 @@ public class Category {
         this.sort = sort;
     }
 
-    public Long getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(String user) {
         this.user = user;
     }
 

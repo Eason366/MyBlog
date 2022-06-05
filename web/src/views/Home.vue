@@ -28,10 +28,18 @@
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
-          <span >
-            <component :is= EyeOutlined style="margin-right: 0.08rem" />
-            {{ item.viewCount}}
-          </span>
+              <span >
+                <component :is= UserOutlined style="margin-right: 0.08rem" />
+                {{ item.user}}
+              </span>
+              <span >
+                <component :is= EyeOutlined style="margin-right: 0.08rem" />
+                {{ item.viewCount}}
+              </span>
+              <span >
+                <component :is= LikeOutlined style="margin-right: 0.08rem" />
+                {{ item.voteCount}}
+              </span>
             </template>
             <template #extra>
               <img
@@ -59,7 +67,7 @@
 
 
 <script lang="ts">
-import { AppstoreOutlined,EyeOutlined,UserOutlined,GithubFilled,LinkedinFilled,MailFilled} from '@ant-design/icons-vue';
+import { AppstoreOutlined,EyeOutlined,UserOutlined,LikeOutlined} from '@ant-design/icons-vue';
 import {defineComponent, ref, onMounted, watch} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
@@ -71,9 +79,7 @@ export default defineComponent({
     AppstoreOutlined,
     EyeOutlined,
     UserOutlined,
-    GithubFilled,
-    LinkedinFilled,
-    MailFilled,
+    LikeOutlined,
   },
   setup() {
     console.log("setup");
@@ -219,13 +225,11 @@ export default defineComponent({
       openKeys: ref<string[]>(['sub1']),
       EyeOutlined,
       UserOutlined,
+      LikeOutlined,
       pagination,
       blogs,
       CategoryParentLevel,
       onSearch,
-      GithubFilled,
-      LinkedinFilled,
-      MailFilled,
       selectedKeys,
     };
   },

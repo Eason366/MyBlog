@@ -9,7 +9,7 @@
     <result column="cover" jdbcType="VARCHAR" property="cover" />
     <result column="view_count" jdbcType="INTEGER" property="viewCount" />
     <result column="vote_count" jdbcType="INTEGER" property="voteCount" />
-    <result column="user" jdbcType="BIGINT" property="user" />
+    <result column="user" jdbcType="VARCHAR" property="user" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -108,7 +108,7 @@
       vote_count, `user`)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{category,jdbcType=BIGINT}, 
       #{description,jdbcType=VARCHAR}, #{cover,jdbcType=VARCHAR}, #{viewCount,jdbcType=INTEGER}, 
-      #{voteCount,jdbcType=INTEGER}, #{user,jdbcType=BIGINT})
+      #{voteCount,jdbcType=INTEGER}, #{user,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.eason.blog.domain.Blog">
     insert into blog
@@ -161,7 +161,7 @@
         #{voteCount,jdbcType=INTEGER},
       </if>
       <if test="user != null">
-        #{user,jdbcType=BIGINT},
+        #{user,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -196,7 +196,7 @@
         vote_count = #{record.voteCount,jdbcType=INTEGER},
       </if>
       <if test="record.user != null">
-        `user` = #{record.user,jdbcType=BIGINT},
+        `user` = #{record.user,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -212,7 +212,7 @@
       cover = #{record.cover,jdbcType=VARCHAR},
       view_count = #{record.viewCount,jdbcType=INTEGER},
       vote_count = #{record.voteCount,jdbcType=INTEGER},
-      `user` = #{record.user,jdbcType=BIGINT}
+      `user` = #{record.user,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -239,7 +239,7 @@
         vote_count = #{voteCount,jdbcType=INTEGER},
       </if>
       <if test="user != null">
-        `user` = #{user,jdbcType=BIGINT},
+        `user` = #{user,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -252,7 +252,7 @@
       cover = #{cover,jdbcType=VARCHAR},
       view_count = #{viewCount,jdbcType=INTEGER},
       vote_count = #{voteCount,jdbcType=INTEGER},
-      `user` = #{user,jdbcType=BIGINT}
+      `user` = #{user,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

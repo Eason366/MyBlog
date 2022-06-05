@@ -274,7 +274,7 @@ public class BlogExample {
             return (Criteria) this;
         }
 
-        public Criteria andCategoryIn(List<Long> values) {
+        public Criteria andCategoryIn(List<String> values) {
             addCriterion("category in", values, "category");
             return (Criteria) this;
         }
@@ -564,52 +564,62 @@ public class BlogExample {
             return (Criteria) this;
         }
 
-        public Criteria andUserEqualTo(Long value) {
+        public Criteria andUserEqualTo(String value) {
             addCriterion("`user` =", value, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserNotEqualTo(Long value) {
+        public Criteria andUserNotEqualTo(String value) {
             addCriterion("`user` <>", value, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserGreaterThan(Long value) {
+        public Criteria andUserGreaterThan(String value) {
             addCriterion("`user` >", value, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserGreaterThanOrEqualTo(Long value) {
+        public Criteria andUserGreaterThanOrEqualTo(String value) {
             addCriterion("`user` >=", value, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserLessThan(Long value) {
+        public Criteria andUserLessThan(String value) {
             addCriterion("`user` <", value, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserLessThanOrEqualTo(Long value) {
+        public Criteria andUserLessThanOrEqualTo(String value) {
             addCriterion("`user` <=", value, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserIn(List<Long> values) {
+        public Criteria andUserLike(String value) {
+            addCriterion("`user` like", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNotLike(String value) {
+            addCriterion("`user` not like", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIn(List<String> values) {
             addCriterion("`user` in", values, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserNotIn(List<Long> values) {
+        public Criteria andUserNotIn(List<String> values) {
             addCriterion("`user` not in", values, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserBetween(Long value1, Long value2) {
+        public Criteria andUserBetween(String value1, String value2) {
             addCriterion("`user` between", value1, value2, "user");
             return (Criteria) this;
         }
 
-        public Criteria andUserNotBetween(Long value1, Long value2) {
+        public Criteria andUserNotBetween(String value1, String value2) {
             addCriterion("`user` not between", value1, value2, "user");
             return (Criteria) this;
         }
