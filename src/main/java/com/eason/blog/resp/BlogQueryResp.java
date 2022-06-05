@@ -15,6 +15,8 @@ public class BlogQueryResp {
 
     private Integer voteCount;
 
+    private Long user;
+
     public Long getId() {
         return id;
     }
@@ -71,20 +73,25 @@ public class BlogQueryResp {
         this.voteCount = voteCount;
     }
 
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", name=").append(name);
-        sb.append(", category=").append(category);
-        sb.append(", description=").append(description);
-        sb.append(", cover=").append(cover);
-        sb.append(", viewCount=").append(viewCount);
-        sb.append(", voteCount=").append(voteCount);
-        sb.append("]");
-        return sb.toString();
+        return "BlogQueryResp{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", cover='" + cover + '\'' +
+                ", viewCount=" + viewCount +
+                ", voteCount=" + voteCount +
+                ", user=" + user +
+                '}';
     }
 }

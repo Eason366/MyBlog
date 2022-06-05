@@ -22,6 +22,8 @@ public class BlogSaveReq {
 
     private String htmlcontent;
 
+    private Long user;
+
     public Long getId() {
         return id;
     }
@@ -94,6 +96,14 @@ public class BlogSaveReq {
         this.htmlcontent = htmlcontent;
     }
 
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "BlogSaveReq{" +
@@ -104,8 +114,9 @@ public class BlogSaveReq {
                 ", cover='" + cover + '\'' +
                 ", viewCount=" + viewCount +
                 ", voteCount=" + voteCount +
-                ", mdContent='" + mdcontent + '\'' +
-                ", htmlContent='" + htmlcontent + '\'' +
+                ", mdcontent='" + mdcontent + '\'' +
+                ", htmlcontent='" + htmlcontent + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

@@ -19,6 +19,8 @@ public class BlogQueryReq extends PageReq{
 
     private String categories;
 
+    private Long user;
+
     public Long getId() {
         return id;
     }
@@ -83,6 +85,14 @@ public class BlogQueryReq extends PageReq{
         this.categories = categories;
     }
 
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "BlogQueryReq{" +
@@ -93,7 +103,8 @@ public class BlogQueryReq extends PageReq{
                 ", cover='" + cover + '\'' +
                 ", viewCount=" + viewCount +
                 ", voteCount=" + voteCount +
-                ", categories=" + categories +
+                ", categories='" + categories + '\'' +
+                ", user=" + user +
                 "} " + super.toString();
     }
 }

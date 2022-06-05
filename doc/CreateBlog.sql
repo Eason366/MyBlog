@@ -7,17 +7,18 @@ create table `blog` (
   `cover` varchar(200) default 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' comment 'cover',
   `view_count` int not null default 0 comment 'view_count',
   `vote_count` int not null default 0 comment 'vote_count',
+  `user` bigint not null comment 'userId',
 
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='blog';
 
-insert into `blog` (id, name,category) values (1, 'Spring Boot 入门教程',202);
-insert into `blog` (id, name,category) values (2, 'Vue 入门教程',500);
-insert into `blog` (id, name,category) values (3, 'Python 入门教程',300);
-insert into `blog` (id, name,category) values (4, 'Mysql 入门教程',401);
-insert into `blog` (id, name,category) values (5, 'Oracle 入门教程',500);
-insert into `blog` (id, name,category) values (6, 'LeetCode001',201);
-insert into `blog` (id, name,category) values (7, 'LeetCode123',201);
+insert into `blog` (id, name,category,user) values (1, 'Spring Boot 入门教程',202,1);
+insert into `blog` (id, name,category,user) values (2, 'Vue 入门教程',500,1);
+insert into `blog` (id, name,category,user) values (3, 'Python 入门教程',300,1);
+insert into `blog` (id, name,category,user) values (4, 'Mysql 入门教程',401,1);
+insert into `blog` (id, name,category,user) values (5, 'Oracle 入门教程',500,1);
+insert into `blog` (id, name,category,user) values (6, 'LeetCode001',201,1);
+insert into `blog` (id, name,category,user) values (7, 'LeetCode123',201,1);
 
 
 # 分类
@@ -27,18 +28,20 @@ create table `category` (
     `parent` bigint not null default 0 comment 'parent',
     `name` varchar(50) not null comment 'name',
     `sort` int comment 'sort',
+    `user` bigint not null comment 'userId',
+
     primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='category';
 
-insert into `category` (id, parent, name, sort) values (200, 000, 'Java', 200);
-insert into `category` (id, parent, name, sort) values (201, 200, 'LeetCode', 201);
-insert into `category` (id, parent, name, sort) values (202, 200, 'Spring', 202);
-insert into `category` (id, parent, name, sort) values (300, 000, 'Python', 300);
-insert into `category` (id, parent, name, sort) values (301, 300, 'Crawler', 301);
-insert into `category` (id, parent, name, sort) values (302, 300, 'Machine Learning', 302);
-insert into `category` (id, parent, name, sort) values (400, 000, 'DataBase', 400);
-insert into `category` (id, parent, name, sort) values (401, 400, 'MySQL', 401);
-insert into `category` (id, parent, name, sort) values (500, 000, 'Other', 500);
+insert into `category` (id, parent, name, sort,user) values (200, 000, 'Java', 200,1);
+insert into `category` (id, parent, name, sort,user) values (201, 200, 'LeetCode', 201,1);
+insert into `category` (id, parent, name, sort,user) values (202, 200, 'Spring', 202,1);
+insert into `category` (id, parent, name, sort,user) values (300, 000, 'Python', 300,1);
+insert into `category` (id, parent, name, sort,user) values (301, 300, 'Crawler', 301,1);
+insert into `category` (id, parent, name, sort,user) values (302, 300, 'Machine Learning', 302,1);
+insert into `category` (id, parent, name, sort,user) values (400, 000, 'DataBase', 400,1);
+insert into `category` (id, parent, name, sort,user) values (401, 400, 'MySQL', 401,1);
+insert into `category` (id, parent, name, sort,user) values (500, 000, 'Other', 500,1);
 
 -- blog content
 drop table if exists `content`;
@@ -51,6 +54,7 @@ create table `content` (
 
 -- User
 drop table if exists `BlogUser`;
+drop table if exists `bloguser`;
 create table `BlogUser` (
     `id` bigint not null comment 'ID',
     `login_name` varchar(50) not null comment 'login_name',
@@ -59,3 +63,4 @@ create table `BlogUser` (
     primary key (`id`),
     unique key `login_name_unique` (`login_name`)
 ) engine=innodb default charset=utf8mb4 comment='BlogUser';
+insert into `BlogUser` (id, login_name,name,password) values (1,'test','test','1168982d7f8e34c25387587b59432d9f');

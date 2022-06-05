@@ -41,8 +41,9 @@
                              type="XMLMAPPER"/>
 
 <!--        <table tableName="blog" domainObjectName="Blog"/>-->
+        <table tableName="category"/>
 <!--        <table tableName="blog"/>-->
 <!--        <table tableName="content"/>-->
-        <table tableName="bloguser"/>
+<!--        <table tableName="bloguser"/>-->
     </context>
 </generatorConfiguration>

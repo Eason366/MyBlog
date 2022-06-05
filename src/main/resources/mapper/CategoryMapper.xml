@@ -6,6 +6,7 @@
     <result column="parent" jdbcType="BIGINT" property="parent" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="user" jdbcType="BIGINT" property="user" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -66,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, parent, `name`, sort
+    id, parent, `name`, sort, `user`
   </sql>
   <select id="selectByExample" parameterType="com.eason.blog.domain.CategoryExample" resultMap="BaseResultMap">
     select
@@ -100,9 +101,9 @@
   </delete>
   <insert id="insert" parameterType="com.eason.blog.domain.Category">
     insert into category (id, parent, `name`, 
-      sort)
+      sort, `user`)
     values (#{id,jdbcType=BIGINT}, #{parent,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
-      #{sort,jdbcType=INTEGER})
+      #{sort,jdbcType=INTEGER}, #{user,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.eason.blog.domain.Category">
     insert into category
@@ -119,6 +120,9 @@
       <if test="sort != null">
         sort,
       </if>
+      <if test="user != null">
+        `user`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -132,6 +136,9 @@
       </if>
       <if test="sort != null">
         #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="user != null">
+        #{user,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -156,6 +163,9 @@
       <if test="record.sort != null">
         sort = #{record.sort,jdbcType=INTEGER},
       </if>
+      <if test="record.user != null">
+        `user` = #{record.user,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -166,7 +176,8 @@
     set id = #{record.id,jdbcType=BIGINT},
       parent = #{record.parent,jdbcType=BIGINT},
       `name` = #{record.name,jdbcType=VARCHAR},
-      sort = #{record.sort,jdbcType=INTEGER}
+      sort = #{record.sort,jdbcType=INTEGER},
+      `user` = #{record.user,jdbcType=BIGINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -183,6 +194,9 @@
       <if test="sort != null">
         sort = #{sort,jdbcType=INTEGER},
       </if>
+      <if test="user != null">
+        `user` = #{user,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -190,7 +204,8 @@
     update category
     set parent = #{parent,jdbcType=BIGINT},
       `name` = #{name,jdbcType=VARCHAR},
-      sort = #{sort,jdbcType=INTEGER}
+      sort = #{sort,jdbcType=INTEGER},
+      `user` = #{user,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

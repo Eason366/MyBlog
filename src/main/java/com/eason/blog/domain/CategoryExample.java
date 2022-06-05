@@ -144,7 +144,7 @@ public class CategoryExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<String> values) {
+        public Criteria andIdIn(List<Long> values) {
             addCriterion("id in", values, "id");
             return (Criteria) this;
         }
@@ -351,6 +351,66 @@ public class CategoryExample {
 
         public Criteria andSortNotBetween(Integer value1, Integer value2) {
             addCriterion("sort not between", value1, value2, "sort");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIsNull() {
+            addCriterion("`user` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIsNotNull() {
+            addCriterion("`user` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserEqualTo(Long value) {
+            addCriterion("`user` =", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNotEqualTo(Long value) {
+            addCriterion("`user` <>", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserGreaterThan(Long value) {
+            addCriterion("`user` >", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserGreaterThanOrEqualTo(Long value) {
+            addCriterion("`user` >=", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserLessThan(Long value) {
+            addCriterion("`user` <", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserLessThanOrEqualTo(Long value) {
+            addCriterion("`user` <=", value, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserIn(List<Long> values) {
+            addCriterion("`user` in", values, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNotIn(List<Long> values) {
+            addCriterion("`user` not in", values, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserBetween(Long value1, Long value2) {
+            addCriterion("`user` between", value1, value2, "user");
+            return (Criteria) this;
+        }
+
+        public Criteria andUserNotBetween(Long value1, Long value2) {
+            addCriterion("`user` not between", value1, value2, "user");
             return (Criteria) this;
         }
     }

@@ -15,6 +15,8 @@ public class Blog {
 
     private Integer voteCount;
 
+    private Long user;
+
     public Long getId() {
         return id;
     }
@@ -71,6 +73,14 @@ public class Blog {
         this.voteCount = voteCount;
     }
 
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -84,6 +94,7 @@ public class Blog {
         sb.append(", cover=").append(cover);
         sb.append(", viewCount=").append(viewCount);
         sb.append(", voteCount=").append(voteCount);
+        sb.append(", user=").append(user);
         sb.append("]");
         return sb.toString();
     }

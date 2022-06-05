@@ -13,6 +13,8 @@ public class CategorySaveReq {
     @NotNull(message = "Category Sort not be null")
     private Integer sort;
 
+    private Long user;
+
     public Long getId() {
         return id;
     }
@@ -45,17 +47,22 @@ public class CategorySaveReq {
         this.sort = sort;
     }
 
+    public Long getUser() {
+        return user;
+    }
+
+    public void setUser(Long user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", parent=").append(parent);
-        sb.append(", name=").append(name);
-        sb.append(", sort=").append(sort);
-        sb.append("]");
-        return sb.toString();
+        return "CategorySaveReq{" +
+                "id=" + id +
+                ", parent=" + parent +
+                ", name='" + name + '\'' +
+                ", sort=" + sort +
+                ", user=" + user +
+                '}';
     }
 }
