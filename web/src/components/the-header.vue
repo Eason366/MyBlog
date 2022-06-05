@@ -1,22 +1,29 @@
 <template>
   <a-layout-header class="header" :style="{height:'0.64rem', position: 'fixed', zIndex: 1, width: '100%'}">
     <div class="logo" :style="{}"> Eason's Blog </div>
-    <a-space class="login-menu" :size=30>
 
-      <a class="login-sign" v-show="!user.id" @click="showLoginModal">
-        <span>Login</span>
-      </a>
+    <a class="login-sign" v-show="!user.id" @click="showSignModal">
+      <span>Sign in</span>
+    </a>
 
-      <a class="login-sign" v-show="!user.id" @click="showSignModal">
-        <span>Sign in</span>
-      </a>
+    <a class="login-sign" v-show="!user.id" @click="showLoginModal">
+      <span>Login</span>
+    </a>
 
+    <a-popconfirm
+        title="Are you sure Logout?"
+        ok-text="Yes"
+        cancel-text="No"
+        @confirm="logout"
+    >
       <a class="login-sign" v-show="user.id">
-        <span>您好：{{user.name}}</span>
+        <span>Logout</span>
       </a>
+    </a-popconfirm>
 
-    </a-space>
-
+    <div class="login-sign" v-show="user.id">
+      <span>Welcome: {{user.name}}</span>
+    </div>
 
 
     <a-menu
@@ -216,7 +223,19 @@ export default defineComponent({
       });
     };
 
-
+    //========================  Logout  ========================
+    const logout = () => {
+      console.log("Logout begin");
+      axios.get('/user/logout/' + user.value.token).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          message.success("Logout Successful！");
+          store.commit("setUser", {});
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
     //========================  Rule  ========================
     const formRef = ref();
 
@@ -286,6 +305,7 @@ export default defineComponent({
       showLoginModal,
       loginUser,
       login,
+      logout,
       user,
     }
   }
@@ -301,14 +321,13 @@ export default defineComponent({
   font-size: 0.2rem;
   line-height: 0.64rem;
 }
-.login-menu {
+.login-sign{
+  color: white;
+  padding-left: 1rem;
   float: right;
   height: 0.64rem;
   font-size: 0.2rem;
   line-height: 0.64rem;
-}
-.login-sign{
-  color: white;
 }
 
 </style>

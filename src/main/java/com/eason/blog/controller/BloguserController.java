@@ -76,10 +76,18 @@ public class BloguserController {
         Long token = snowFlake.nextId();
         LOG.info("Generate token：{}，put in to redis", token);
         bloguserLoginResp.setToken(token.toString());
-        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(bloguserLoginResp), 3600 * 24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(bloguserLoginResp), 3600 * 24, TimeUnit.SECONDS);
 
 
         resp.setContent(bloguserLoginResp);
+        return resp;
+    }
+
+    @GetMapping("/logout/{token}")
+    public CommonResp logout(@PathVariable String token) {
+        CommonResp resp = new CommonResp<>();
+        redisTemplate.delete(token);
+        LOG.info("Delete token from redis: {}", token);
         return resp;
     }
 
