@@ -32,6 +32,9 @@ public class BlogService {
     private BlogMapper blogMapper;
 
     @Resource
+    private BloguserService bloguserService;
+
+    @Resource
     private ContentMapper contentMapper;
 
     @Resource
@@ -55,6 +58,9 @@ public class BlogService {
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Blog> blogsList = blogMapper.selectByExample(blogExample);
 
+        for (Blog b : blogsList) {
+            b.setUser(bloguserService.getName(b.getUser()));
+        }
 
         PageInfo<Blog> pageInfo = new PageInfo<>(blogsList);
         LOG.info("Total Rows：{}", pageInfo.getTotal());
