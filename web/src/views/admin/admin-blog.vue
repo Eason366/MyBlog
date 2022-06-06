@@ -318,6 +318,7 @@ export default defineComponent({
         params: {
           page: params.page,
           size: params.size,
+          user: user.value.loginName,
         }
       }).then((response) => {
 

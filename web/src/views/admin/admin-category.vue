@@ -5,11 +5,9 @@
         style="padding: 0.78rem 1.00rem"
     >
 
-      <a-space size="large">
-        <a-button type="primary" @click="add" size="large">
-          Add Category
-        </a-button>
-      </a-space>
+      <a-button type="primary" @click="add" size="large">
+        Add Category
+      </a-button>
 
       <a-table
           :columns="columns"
@@ -28,7 +26,7 @@
                 title="Are you sure delete this Category?"
                 ok-text="Yes"
                 cancel-text="No"
-                @confirm="onDelete(record.id)"
+                @confirm="onDelete(record.id,record.user)"
             >
               <a-button type="primary" danger>
                 Delete
@@ -41,7 +39,7 @@
       </a-table>
       <a-drawer
           :width="500"
-          title="Basic Drawer"
+          title="New Category"
           placement="left"
           :visible="edit_visible"
           @close="edit_onClose"
@@ -110,10 +108,11 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import {computed, defineComponent, onMounted, ref} from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
 import { Tool } from '@/util/tool';
+import store from "@/store";
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -121,6 +120,8 @@ export default defineComponent({
     const loading = ref(false);
     const treeSelectData = ref();
     treeSelectData.value = [];
+    const user = computed(() => store.state.user);
+
     const columns = [
       {
         title: 'Name',
@@ -172,36 +173,46 @@ export default defineComponent({
     };
 
 
-    const onDelete = (id:number) => {
-      ids = []
-      getDeleteIds(categorys.value, id);
-      console.log(ids)
-      axios.delete("/category/deleteIDs/"+ids.join(",")).then((response) => {
-        const data = response.data;
-        if (data.success) {
-          message.success('Category Deleted Successfully');
-          // reload
-          categoryQuery()
-        }else {
-          message.error(data.message)
-        }
-      });
+    const onDelete = (id:number,loginName:string) => {
+      if (loginName==user.value.loginName){
+        ids = []
+        getDeleteIds(categorys.value, id);
+        console.log(ids)
+        axios.delete("/category/deleteIDs/"+ids.join(",")).then((response) => {
+          const data = response.data;
+          if (data.success) {
+            message.success('Category Deleted Successfully');
+            // reload
+            categoryQuery()
+          }else {
+            message.error(data.message)
+          }
+        });
+      }else {
+        message.error("You do not have permission to delete")
+      }
+
     };
 
 
     //========================  Drawer  ========================
     const edit_visible = ref<boolean>(false);
-    const record_category = ref({});
-
+    const record_category = ref();
+    record_category.value = {}
 
     const edit = (record:any) => {
-      edit_visible.value = true;
-      record_category.value = Tool.copy(record)
+      if (record.user==user.value.loginName){
+        edit_visible.value = true;
+        record_category.value = Tool.copy(record)
 
-      treeSelectData.value = Tool.copy(CategoryParentLevel.value);
-      setDisable(treeSelectData.value, record.id);
+        treeSelectData.value = Tool.copy(CategoryParentLevel.value);
+        setDisable(treeSelectData.value, record.id);
 
-      treeSelectData.value.unshift({id: 0, name: 'None'});
+        treeSelectData.value.unshift({id: 0, name: 'None'});
+      }else {
+        message.error("You do not have permission to edit")
+      }
+
     };
 
     const add = () => {
@@ -218,6 +229,7 @@ export default defineComponent({
     };
 
     const edit_Submit = () => {
+      record_category.value.user = user.value.loginName
       axios.post("/category/save", record_category.value).then((response) => {
         const data = response.data;
         if (data.success) {

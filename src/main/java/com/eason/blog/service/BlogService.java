@@ -54,6 +54,9 @@ public class BlogService {
             List<String> list = Arrays.asList(req.getCategories().split(","));
             criteria.andCategoryIn(list);
         }
+        if (!ObjectUtils.isEmpty(req.getUser())){
+            criteria.andUserEqualTo(req.getUser());
+        }
 
         PageHelper.startPage(req.getPage(), req.getSize());
         List<Blog> blogsList = blogMapper.selectByExample(blogExample);

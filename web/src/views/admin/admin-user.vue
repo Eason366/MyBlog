@@ -35,7 +35,7 @@
                 title="Are you sure delete this Blog?"
                 ok-text="Yes"
                 cancel-text="No"
-                @confirm="onDelete(record.id)"
+                @confirm="onDelete(record.id,record.loginName)"
             >
               <a-button type="primary" danger>
                 Delete
@@ -116,10 +116,11 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, UnwrapRef, reactive} from 'vue';
+import {defineComponent, onMounted, ref, UnwrapRef, reactive, computed} from 'vue';
 import { message } from 'ant-design-vue';
 import axios from 'axios';
 import { RuleObject, ValidateErrorEntity } from 'ant-design-vue/es/form/interface';
+import store from "@/store";
 declare let hexMd5: any;
 declare let KEY: any;
 
@@ -135,6 +136,7 @@ export default defineComponent({
   name: 'AdminUser',
   setup() {
     const loading = ref(false);
+    const user = computed(() => store.state.user);
 
     const columns = [
       {
@@ -228,20 +230,24 @@ export default defineComponent({
       total: 0
     });
 
-    const onDelete = (id:number) => {
-      axios.delete("/user/delete/"+id ).then((response) => {
-        const data = response.data;
-        if (data.success) {
-          message.success('User Deleted Successfully');
-          // reload
-          userQuery({
-            page:pagination.value.current,
-            size:pagination.value.pageSize,
-          })
-        }else {
-          message.error(data.message)
-        }
-      });
+    const onDelete = (id:number,loginName:string) => {
+      if (loginName==user.value.loginName){
+        axios.delete("/user/delete/"+id ).then((response) => {
+          const data = response.data;
+          if (data.success) {
+            message.success('User Deleted Successfully');
+            // reload
+            userQuery({
+              page:pagination.value.current,
+              size:pagination.value.pageSize,
+            })
+          }else {
+            message.error(data.message)
+          }
+        });
+      }else {
+        message.error("You do not have permission to delete")
+      }
     };
 
 
@@ -252,29 +258,32 @@ export default defineComponent({
 
     const edit = (record:any) => {
       console.log('record',record)
+      if (record.loginName==user.value.loginName){
+        record_user.loginName = record.loginName
+        record_user.name = record.name
+        record_user.id = record.id
+        record_user.password = record.password
+        record_user.confirm = record.password
 
-      record_user.loginName = record.loginName
-      record_user.name = record.name
-      record_user.id = record.id
-      record_user.password = record.password
-      record_user.confirm = record.password
-
-      edit_visible.value = true;
-      console.log('record_user',record_user)
+        edit_visible.value = true;
+      }else {
+        message.error("You do not have permission to edit")
+      }
     };
 
     const reset = (record:any) => {
       console.log('record',record)
+      if (record.loginName==user.value.loginName){
+        record_user.loginName = record.loginName
+        record_user.name = record.name
+        record_user.id = record.id
+        record_user.password = ''
+        record_user.confirm = ''
 
-      record_user.loginName = record.loginName
-      record_user.name = record.name
-      record_user.id = record.id
-      record_user.password = ''
-      record_user.confirm = ''
-
-      reset_visible.value = true;
-      console.log('record_user',record_user)
-
+        reset_visible.value = true;
+      }else {
+        message.error("You do not have permission to reset your password")
+      }
     };
 
 
