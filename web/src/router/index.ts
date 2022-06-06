@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import store from "@/store";
 import {Tool} from "@/util/tool";
+import axios from "axios";
+import {message} from "ant-design-vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -72,10 +74,52 @@ router.beforeEach((to, from, next) => {
       console.log("用户未登录！");
       next('/');
     } else {
-      next();
+      console.log(loginUser.token)
+      axios.get("/redis/get/"+loginUser.token).then((response) => {
+        if (response.data){
+          next();
+        }else {
+          message.error("Login expired, please login again")
+          console.log("Logout begin");
+          axios.get('/user/logout/' + loginUser.token).then((response) => {
+            const data = response.data;
+            if (data.success) {
+              store.commit("setUser", {});
+            } else {
+              message.error(data.message);
+            }
+          });
+          next('/');
+        }
+      });
+
     }
   } else {
-    next();
+    const loginUser = store.state.user;
+    if (Tool.isEmpty(loginUser)) {
+      console.log("用户未登录！");
+      next();
+    } else {
+      console.log(loginUser.token)
+      axios.get("/redis/get/"+loginUser.token).then((response) => {
+        if (response.data){
+          next();
+        }else {
+          message.error("Login expired, please login again")
+          console.log("Logout begin");
+          axios.get('/user/logout/' + loginUser.token).then((response) => {
+            const data = response.data;
+            if (data.success) {
+              store.commit("setUser", {});
+            } else {
+              message.error(data.message);
+            }
+          });
+          next();
+        }
+      });
+
+    }
   }
 });
 

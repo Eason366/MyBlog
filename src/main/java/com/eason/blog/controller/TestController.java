@@ -27,15 +27,16 @@ public class TestController {
 
     @RequestMapping("/redis/set/{key}/{value}")
     public String set(@PathVariable Long key, @PathVariable String value) {
-        redisTemplate.opsForValue().set(key, value, 3600, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(key.toString(), value, 3600, TimeUnit.SECONDS);
         LOG.info("key: {}, value: {}", key, value);
         return "success";
     }
 
     @RequestMapping("/redis/get/{key}")
-    public Object get(@PathVariable Long key) {
-        Object object = redisTemplate.opsForValue().get(key);
+    public boolean get(@PathVariable Long key) {
+        Object object = redisTemplate.opsForValue().get(key.toString());
         LOG.info("key: {}, value: {}", key, object);
-        return object;
+//        return object;
+        return object!=null;
     }
 }
