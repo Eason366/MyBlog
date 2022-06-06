@@ -4,19 +4,15 @@
         :style="{ background: '#fff', padding: '0.24rem', margin: 0, minHeight: '2.80rem' }"
         style="padding: 0.78rem 1.00rem"
     >
-      <a-space size="large">
-        <a-button type="primary" @click="add" size="large">
-          Add User
-        </a-button>
 
-        <a-input-search
-            placeholder="Input Name to Search"
-            style="width: 5.00rem"
-            size="large"
-            enter-button="Search"
-            @search="onSearch"
-        />
-      </a-space>
+
+      <a-input-search
+          placeholder="Input Name to Search"
+          style="width: 5.00rem"
+          size="large"
+          enter-button="Search"
+          @search="onSearch"
+      />
 
 
       <a-table
@@ -78,55 +74,6 @@
             </a-col>
           </a-row>
 
-        </a-form>
-      </a-modal>
-
-      <a-modal
-          title="New User"
-          v-model:visible="new_visible"
-          ok-text="Submit"
-          cancel-text="Cancel"
-          @ok="new_Submit"
-      >
-
-        <a-form :model="record_user" layout="vertical" :rules="rules" ref="formRef">
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="User Name" name="loginName">
-                <a-input v-model:value="record_user.loginName"
-                         placeholder="Please enter Your User Name"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="Nick Name" name="name">
-                <a-input v-model:value="record_user.name" placeholder="Please enter Your NickName"/>
-              </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="Password" name="password">
-                <a-input-password v-model:value="record_user.password"
-                                  show-count :maxlength="20"
-                                  placeholder="Please enter Your Password"/>
-              </a-form-item>
-            </a-col>
-          </a-row>
-
-          <a-row :gutter="16">
-            <a-col :span="24">
-              <a-form-item label="Password Confirm" name="confirm">
-                <a-input-password v-model:value="record_user.confirm"
-                                  show-count :maxlength="20"
-                                  placeholder="Please enter Your Password again"/>
-              </a-form-item>
-            </a-col>
-          </a-row>
         </a-form>
       </a-modal>
 
@@ -300,7 +247,6 @@ export default defineComponent({
 
     //========================  Model  ========================
     const edit_visible = ref<boolean>(false);
-    const new_visible = ref<boolean>(false);
     const reset_visible = ref<boolean>(false);
 
 
@@ -365,48 +311,6 @@ export default defineComponent({
 
 
     };
-    const add = () => {
-      record_user.loginName = ''
-      record_user.name = ''
-      record_user.password = ''
-      record_user.confirm = ''
-
-      new_visible.value = true;
-    };
-
-    const new_Submit = () => {
-      formRef.value
-          .validate().then(() => {
-        const tempUser = ref({
-          id:record_user.id,
-          name:record_user.name,
-          loginName:record_user.loginName,
-          password:hexMd5(record_user.password + KEY),
-        })
-        axios.post("/user/save", tempUser.value).then((response) => {
-          const data = response.data;
-          console.log(record_user)
-          if (data.success) {
-            new_visible.value = false;
-
-
-            // reload
-            userQuery({
-              page:pagination.value.current,
-              size:pagination.value.pageSize,
-            })
-          }else {
-            message.error(data.message)
-          }
-        });
-      })
-          .catch((error: ValidateErrorEntity<FormState>) => {
-            console.log('error', error);
-          });
-
-
-    };
-
     
     //========================  Query ========================
     const userQuery = (params: { page:number,size:number }) => {
@@ -480,9 +384,6 @@ export default defineComponent({
       edit,
       reset,
       record_user,
-      new_visible,
-      add,
-      new_Submit,
     }
   }
 });

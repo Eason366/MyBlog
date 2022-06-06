@@ -6,6 +6,10 @@
       <span>Login</span>
     </a>
 
+    <a class="login-sign" v-show="!user.id" @click="showSignModal">
+      <span>Sign in</span>
+    </a>
+
     <a-popconfirm
         title="Are you sure Logout?"
         ok-text="Yes"
@@ -47,6 +51,55 @@
     </a-menu>
 
     <a-modal
+        title="New User"
+        v-model:visible="signModalVisible"
+        ok-text="Submit"
+        cancel-text="Cancel"
+        @ok="signSubmit"
+    >
+
+      <a-form :model="newUser" layout="vertical" :rules="rules" ref="formRef">
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="User Name" name="loginName">
+              <a-input v-model:value="newUser.loginName"
+                       placeholder="Please enter Your User Name"
+              />
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="Nick Name" name="name">
+              <a-input v-model:value="newUser.name" placeholder="Please enter Your NickName"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="Password" name="password">
+              <a-input-password v-model:value="newUser.password"
+                                show-count :maxlength="20"
+                                placeholder="Please enter Your Password"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+
+        <a-row :gutter="16">
+          <a-col :span="24">
+            <a-form-item label="Password Confirm" name="confirm">
+              <a-input-password v-model:value="newUser.confirm"
+                                show-count :maxlength="20"
+                                placeholder="Please enter Your Password again"/>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+    </a-modal>
+
+    <a-modal
         title="Login"
         v-model:visible="loginModalVisible"
         :confirm-loading="loginModalLoading"
@@ -71,10 +124,19 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, computed} from 'vue';
+import {defineComponent, reactive, ref, UnwrapRef, computed} from 'vue';
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+import {RuleObject, ValidateErrorEntity} from "ant-design-vue/es/form/interface";
 import store from "@/store";
+
+interface FormState {
+  loginName: string;
+  name: string;
+  password: string;
+  confirm:string;
+  id:number|undefined;
+}
 
 declare let hexMd5: any;
 declare let KEY: any;
@@ -87,6 +149,48 @@ export default defineComponent({
     const loginModalLoading = ref(false);
     const signModalVisible = ref<boolean>(false);
     const user = computed(() => store.state.user);
+
+
+    //========================  Sign in  ========================
+
+    const newUser : UnwrapRef<FormState> = reactive({
+      loginName: '',
+      name: '',
+      password: '',
+      confirm:'',
+      id:undefined,
+    });
+
+    const showSignModal = () => {
+      newUser.loginName = ''
+      newUser.name = ''
+      newUser.password = ''
+      newUser.confirm = ''
+
+      signModalVisible.value = true;
+    };
+
+    const signSubmit = () => {
+      formRef.value
+          .validate().then(() => {
+        newUser.password= hexMd5(newUser.password + KEY);
+        axios.post("/user/save", newUser).then((response) => {
+          const data = response.data;
+          console.log(newUser)
+          if (data.success) {
+            signModalVisible.value = false;
+
+          }else {
+            message.error(data.message)
+          }
+        });
+      })
+          .catch((error: ValidateErrorEntity<FormState>) => {
+            console.log('error', error);
+          });
+
+
+    };
 
     //========================  Login  ========================
 
@@ -137,9 +241,66 @@ export default defineComponent({
         }
       });
     };
+    //========================  Rule  ========================
+    const formRef = ref();
+
+    let passwordValidator1 = async(rule: RuleObject, value: string) => {
+      if (value && value.indexOf(' ') === -1) {
+        return Promise.resolve()
+      } else {
+        return Promise.reject('Please enter characters without spaces')
+      }
+    }
+
+    let passwordValidator2 = async(rule: RuleObject, value: string) => {
+      let passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,20}/
+      if (!passwordreg.test(value)) {
+        return Promise.reject('Password must be a combination of numbers, letters and special characters, please enter 6-20 digits')
+      }else{
+        return Promise.resolve()
+      }
+    }
+
+    let confirmValidator = async(rule: RuleObject, value: string) => {
+      if (value !== newUser.password) {
+        return Promise.reject("Two inputs don't match!");
+      } else {
+        return Promise.resolve();
+      }
+    }
+
+
+    const rules = {
+      loginName:[ { required: true, message: 'Please enter Your User Name', trigger: ['change', 'blur'] }],
+      name:[ { required: true, message: 'Please enter Your Nick Name', trigger: ['change', 'blur'] }],
+      password: [
+        { required: true, message: 'Please enter Your Password', trigger: ['change', 'blur'] },
+        {
+          type: 'string',
+          trigger: ['change', 'blur'],
+          validator: passwordValidator1,
+        },
+        {
+          trigger: ['change', 'blur'],
+          validator: passwordValidator2, }
+      ],
+      confirm:[
+        { required: true, message: 'Please enter Your Password again', trigger: ['change', 'blur'] },
+        {
+          validator: confirmValidator,
+          trigger: ['change', 'blur']
+        }
+      ],
+
+    }
 
 
     return {
+      formRef,
+      rules,
+      newUser,
+      showSignModal,
+      signSubmit,
       signModalVisible,
       loginModalVisible,
       loginModalLoading,
