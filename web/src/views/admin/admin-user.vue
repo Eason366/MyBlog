@@ -411,10 +411,11 @@ export default defineComponent({
     //========================  Query ========================
     const userQuery = (params: { page:number,size:number }) => {
       loading.value = true;
+      console.log(params)
       axios.get("/user/list", {
         params: {
-          page: params.page,
-          size: params.size,
+          page:pagination.value.current,
+          size:pagination.value.pageSize,
         }
       }).then((response) => {
 
@@ -460,10 +461,7 @@ export default defineComponent({
 
 
     onMounted(() => {
-      userQuery({
-        page:pagination.value.current,
-        size:pagination.value.pageSize,
-      })
+      onSearch("")
 
     });
 
