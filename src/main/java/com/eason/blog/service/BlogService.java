@@ -111,6 +111,7 @@ public class BlogService {
 
     public BlogQueryResp list(Long id){
         Blog blog = blogMapper.selectByPrimaryKey(id);
+        blog.setUser(bloguserService.getName(blog.getUser()));
         BlogQueryResp blogQueryResp = CopyUtil.copy(blog, BlogQueryResp.class);
 
         return blogQueryResp;

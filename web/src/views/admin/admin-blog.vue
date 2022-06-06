@@ -260,6 +260,8 @@ export default defineComponent({
 
     const edit_Submit = () => {
       record_blog.value.user = user.value.loginName
+      record_blog.value.mdcontent = ''
+      record_blog.value.htmlcontent = ''
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
         console.log(record_blog.value)

@@ -1,6 +1,27 @@
 <template>
   <a-layout style="padding: 0.64rem; background: #fff">
     <a-layout-content>
+
+      <div class="title">
+        <h2>{{doc.title}}</h2>
+        <a-space size="large" >
+          <span >
+            <component :is= UserOutlined style="margin-right: 0.08rem" />
+            {{doc.user}}
+          </span>
+          <span >
+            <component :is= EyeOutlined style="margin-right: 0.08rem" />
+            {{doc.viewCount}}
+          </span>
+          <span >
+            <component :is= LikeOutlined style="margin-right: 0.08rem" />
+            {{doc.voteCount}}
+          </span>
+        </a-space>
+      </div>
+
+      <a-divider style="height: 2px; background-color: #9999cc"/>
+
       <div class="editor" :innerHTML="html" style="margin: 0rem 2.60rem 0rem 2.60rem">
         <!--      {{html}}-->
       </div>
@@ -13,14 +34,28 @@
 import { defineComponent, onMounted,ref} from 'vue';
 import axios from 'axios';
 import {message} from 'ant-design-vue';
+import {EyeOutlined, LikeOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'Doc',
+  components: {
+    EyeOutlined,
+    UserOutlined,
+    LikeOutlined,
+  },
   data() {
     const html = ref()
+    const doc = ref()
+    doc.value = {
+      title:'',
+      viewCount:0,
+      voteCount:0,
+      user:'',
+    }
     return {
       html,
+      doc,
     }
   },
   methods: {
@@ -36,9 +71,26 @@ export default defineComponent({
         }
       });
     },
+    blogQuery (){
+      axios.get("/blog/list/"+this.$route.query.blogId).then((response) => {
+        const data = response.data;
+        if (data.success){
+          this.doc = {
+            title:data.content.name,
+            viewCount:data.content.viewCount,
+            voteCount:data.content.voteCount,
+            user:data.content.user,
+          }
+        } else {
+          message.error(data.message)
+        }
+
+      });
+    },
   },
   mounted() {
     this.$nextTick(function () {
+      this.blogQuery()
       this.htmlContentQuery()
 
     })
@@ -51,6 +103,9 @@ export default defineComponent({
     });
 
     return {
+      EyeOutlined,
+      UserOutlined,
+      LikeOutlined,
     }
   }
 });
@@ -116,6 +171,19 @@ export default defineComponent({
 .editor h1 {
   font-size: 0.36rem;
   line-height: 0.40rem;
+}
+.editor img{
+  max-width:5rem;
+  :width:e-xpression(this.width>5?"5rem":this.width);
+}
+.title{
+  text-align: center;
+}
+.title h2{
+  font-size: 0.6rem;
+}
+.title span{
+  font-size: 0.3rem;
 }
 
 </style>
