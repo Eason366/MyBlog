@@ -116,10 +116,12 @@ export default defineComponent({
     },
     Total_Submit(){
       this.edit_Submit(this.mdContent,this.htmlContent)
+      this.$router.push("/admin/blog");
     },
     Total_onClose(){
       this.edit_onClose()
       this.mdContent=this.mdContentQuery()
+      this.$router.push("/admin/blog");
     },
     mdContentQuery (){
       axios.get("/blog/find-mdContent/"+this.$route.query.blogId).then((response) => {
@@ -162,7 +164,6 @@ export default defineComponent({
         if (data.success) {
 
           // reload
-          blogQuery()
           message.success("Submitted successfully")
         }else {
           message.error(data.message)

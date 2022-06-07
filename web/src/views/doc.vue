@@ -71,7 +71,7 @@ export default defineComponent({
         }
       });
     },
-    blogQuery (){
+    docQuery (){
       axios.get("/blog/list/"+this.$route.query.blogId).then((response) => {
         const data = response.data;
         if (data.success){
@@ -90,7 +90,7 @@ export default defineComponent({
   },
   mounted() {
     this.$nextTick(function () {
-      this.blogQuery()
+      this.docQuery()
       this.htmlContentQuery()
 
     })

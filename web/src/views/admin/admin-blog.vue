@@ -233,7 +233,6 @@ export default defineComponent({
 
     const edit = (record:any) => {
       console.log('record',record)
-      edit_visible.value = true;
       record_blog.value = Tool.copy(record)
       console.log('record_blog',record_blog)
       treeSelectData.value = Tool.copy(CategoryParentLevel.value);

@@ -3,6 +3,12 @@ import store from "@/store";
 import {Tool} from "@/util/tool";
 import axios from "axios";
 import {message} from "ant-design-vue";
+import About from '../views/About.vue'
+import AdminBlog from '../views/admin/admin-blog.vue'
+import AdminCategory from '../views/admin/admin-category.vue'
+import AdminDoc from '../views/admin/admin-doc.vue'
+import AdminUser from '../views/admin/admin-user.vue'
+
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,12 +22,12 @@ const routes: Array<RouteRecordRaw> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: About
   },
   {
     path: '/admin/blog',
     name: 'AdminBlog',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-blog.vue'),
+    component: AdminBlog,
     meta: {
       loginRequire: true
     }
@@ -29,15 +35,15 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/category',
     name: 'AdminCategory',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-category.vue'),
+    component: AdminCategory,
     meta: {
       loginRequire: true
     }
   },
   {
     path: '/admin/doc',
-    name: 'AdminDoc',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-doc.vue'),
+    name: '',
+    component: () => AdminDoc,
     meta: {
       loginRequire: true
     }
@@ -50,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/user',
     name: 'AdminUser',
-    component: () => import(/* webpackChunkName: "about" */ '../views/admin/admin-user.vue'),
+    component: AdminUser,
     meta: {
       loginRequire: true
     }
