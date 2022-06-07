@@ -76,8 +76,9 @@ router.beforeEach((to, from, next) => {
     return item.meta.loginRequire
   })) {
     const loginUser = store.state.user;
+    console.log('loginUser',loginUser)
     if (Tool.isEmpty(loginUser)) {
-      console.log("用户未登录！");
+      message.error("Login Please！")
       next('/');
     } else {
       console.log(loginUser.token)
@@ -102,8 +103,9 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     const loginUser = store.state.user;
+    console.log('loginUser',loginUser)
     if (Tool.isEmpty(loginUser)) {
-      console.log("用户未登录！");
+      message.error("Login Please！")
       next();
     } else {
       console.log(loginUser.token)

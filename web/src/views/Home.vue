@@ -72,6 +72,7 @@ import {defineComponent, ref, onMounted, watch} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import store from "@/store";
 
 export default defineComponent({
   name: 'Home',
@@ -198,9 +199,11 @@ export default defineComponent({
         const data = response.data;
         if (data.success){
           categorys = data.content;
+          store.commit("setCategory", categorys);
           CategoryParentLevel.value = [];
           CategoryParentLevel.value = Tool.array2Tree(categorys,0);
           console.log("Tree：", CategoryParentLevel.value);
+          store.commit("setTree", CategoryParentLevel.value);
 
 
         } else {

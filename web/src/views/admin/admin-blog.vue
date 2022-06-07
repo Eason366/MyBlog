@@ -19,7 +19,7 @@
             enter-button="Search"
             @search="onSearch"
         />
-        </a-space>
+      </a-space>
 
       <a-table
           :columns="columns"
@@ -34,10 +34,10 @@
         <template v-slot:action="{ text, record }">
           <a-space size="small">
             <router-link :to="'/admin/doc?blogId='+record.id">
-              <a-button type="primary" @click="edit(record)">
+              <a-button type="primary">
                 Edit
               </a-button>
-              </router-link>
+            </router-link>
             <a-popconfirm
                 title="Are you sure delete this Blog?"
                 ok-text="Yes"
@@ -57,16 +57,16 @@
           :width="500"
           title="Add a new Blog"
           placement="left"
-          :visible="edit_visible"
+          :visible="add_visible"
           @close="edit_onClose"
       >
 
         <a-form :model="record_blog" layout="vertical">
           <a-row :gutter="16">
             <a-col :span="24">
-          <a-form-item label="Name" name="Name">
-            <a-input v-model:value="record_blog.name" placeholder="Please enter blog Name"/>
-          </a-form-item>
+              <a-form-item label="Name" name="Name">
+                <a-input v-model:value="record_blog.name" placeholder="Please enter blog Name"/>
+              </a-form-item>
             </a-col>
           </a-row>
 
@@ -178,9 +178,8 @@ export default defineComponent({
     ];
 
     const getCategoryName = (cid: number) => {
-      // console.log(cid)
       let result = "";
-      categorys?.forEach((item: any) => {
+      categorys.value.forEach((item: any) => {
         if (item.id === cid) {
           result = item.name;
         }
@@ -193,8 +192,9 @@ export default defineComponent({
     treeSelectData.value = [];
     const blogs = ref();
     const pageSize = 10;
-    const CategoryParentLevel = ref();
-    let categorys: any;
+    const CategoryParentLevel = computed(() => store.state.tree);
+
+    let categorys = computed(() => store.state.category);
 
 
     const pagination = ref({
@@ -227,30 +227,18 @@ export default defineComponent({
 
 
     //========================  Drawer  ========================
-    const edit_visible = ref<boolean>(false);
+    const add_visible = ref<boolean>(false);
     const record_blog = ref();
     record_blog.value = {}
 
-    const edit = (record:any) => {
-      console.log('record',record)
-      record_blog.value = Tool.copy(record)
-      console.log('record_blog',record_blog)
-      treeSelectData.value = Tool.copy(CategoryParentLevel.value);
-      setDisable(treeSelectData.value, record.id);
-
-      treeSelectData.value.unshift({id: 0, name: 'None'});
-    };
-
     const add = () => {
-      edit_visible.value = true;
+      add_visible.value = true;
       record_blog.value = {};
 
-      treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
-      treeSelectData.value.unshift({id: 0, name: 'None'});
     };
 
     const edit_onClose = () => {
-      edit_visible.value = false;
+      add_visible.value = false;
       blogQuery({
         page:pagination.value.current,
         size:pagination.value.pageSize,
@@ -265,7 +253,7 @@ export default defineComponent({
         const data = response.data;
         console.log(record_blog.value)
         if (data.success) {
-          edit_visible.value = false;
+          add_visible.value = false;
 
           // reload
           blogQuery({
@@ -277,40 +265,6 @@ export default defineComponent({
         }
       });
     };
-
-//========================  setDisable ========================
-
-    /**
-     * Set a node and its descendants to disabled
-     */
-    const setDisable = (treeSelectData: any, id: any) => {
-      // console.log(treeSelectData, id);
-      // Traverse the array, that is, traverse a layer of nodes
-      for (let i = 0; i < treeSelectData.length; i++) {
-        const node = treeSelectData[i];
-        if (node.id === id) {
-          // if the current node is the target node
-          console.log("disabled", node);
-          // Set the target node to disabled
-          node.disabled = true;
-
-          // Traverse all child nodes and add disabled to all child nodes
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            for (let j = 0; j < children.length; j++) {
-              setDisable(children, children[j].id)
-            }
-          }
-        } else {
-          // If the current node is not the target node, go to its child nodes and look for it.
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            setDisable(children, id);
-          }
-        }
-      }
-    };
-
 
     //========================  Query ========================
     const blogQuery = (params: { page:number,size:number }) => {
@@ -331,7 +285,6 @@ export default defineComponent({
           pagination.value.current = params.page;
           pagination.value.total = data.content.total;
 
-          categoryQuery()
         } else {
           message.error(data.message)
         }
@@ -339,25 +292,6 @@ export default defineComponent({
       });
     };
 
-    const categoryQuery = () => {
-      loading.value = true;
-      axios.get("/category/all").then((response) => {
-
-        const data = response.data;
-        if (data.success){
-          categorys = data.content;
-          CategoryParentLevel.value = [];
-          CategoryParentLevel.value = Tool.array2Tree(categorys,0);
-          console.log("Tree：", CategoryParentLevel.value);
-
-          loading.value = false;
-
-        } else {
-          message.error(data.message)
-        }
-
-      });
-    };
 
     //========================  Search ========================
     const onSearch = (searchValue: string) => {
@@ -389,7 +323,8 @@ export default defineComponent({
         page:pagination.value.current,
         size:pagination.value.pageSize,
       })
-
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     });
 
     return {
@@ -397,13 +332,13 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-      edit_visible,
+      add_visible,
       add,
       onSearch,
       onDelete,
       treeSelectData,
       edit_onClose,
-      edit_Submit,edit,
+      edit_Submit,
       record_blog,
       getCategoryName,
     }
