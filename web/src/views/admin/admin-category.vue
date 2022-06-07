@@ -143,7 +143,7 @@ export default defineComponent({
     ];
 
     const categorys = ref();
-    const CategoryParentLevel = ref();
+    const CategoryParentLevel = computed(() => store.state.tree);
 
 
     let ids: Array<string> = [];
@@ -205,10 +205,7 @@ export default defineComponent({
         edit_visible.value = true;
         record_category.value = Tool.copy(record)
 
-        treeSelectData.value = Tool.copy(CategoryParentLevel.value);
         setDisable(treeSelectData.value, record.id);
-
-        treeSelectData.value.unshift({id: 0, name: 'None'});
       }else {
         message.error("You do not have permission to edit")
       }
@@ -218,9 +215,6 @@ export default defineComponent({
     const add = () => {
       edit_visible.value = true;
       record_category.value = {};
-
-      treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
-      treeSelectData.value.unshift({id: 0, name: 'None'});
     };
 
     const edit_onClose = () => {
@@ -284,10 +278,10 @@ export default defineComponent({
         const data = response.data;
         if (data.success){
           categorys.value = data.content;
-          CategoryParentLevel.value = [];
-          CategoryParentLevel.value = Tool.array2Tree(categorys.value,0);
+          store.commit("setTree", Tool.array2Tree(categorys.value,0));
           console.log("Tree：", CategoryParentLevel.value);
-
+          treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
+          treeSelectData.value.unshift({id: 0, name: 'None'});
           loading.value = false;
 
         } else {
@@ -301,7 +295,8 @@ export default defineComponent({
 
 
     onMounted(() => {
-      categoryQuery()
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     });
 
     return {
@@ -320,4 +315,3 @@ export default defineComponent({
   }
 });
 </script>
-

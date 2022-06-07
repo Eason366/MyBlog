@@ -83,8 +83,6 @@
         </a-col>
       </a-row>
 
-
-
     </a-layout-content>
   </a-layout>
 
@@ -93,11 +91,12 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, ref} from 'vue';
+import {computed, defineComponent, onMounted, ref} from 'vue';
 import {useRoute} from "vue-router";
 import axios from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import store from "@/store";
 
 
 export default defineComponent({
@@ -147,8 +146,7 @@ export default defineComponent({
     record_blog.value={};
     const treeSelectData = ref();
     treeSelectData.value = [];
-    const CategoryParentLevel = ref();
-    let categorys: any;
+    const CategoryParentLevel = computed(() => store.state.tree);
 
 //========================  Edit  ========================
 
@@ -171,37 +169,6 @@ export default defineComponent({
       });
     };
 
-//========================  setDisable ========================
-
-    /**
-     * Set a node and its descendants to disabled
-     */
-    const setDisable = (treeSelectData: any, id: any) => {
-      // console.log(treeSelectData, id);
-      // Traverse the array, that is, traverse a layer of nodes
-      for (let i = 0; i < treeSelectData.length; i++) {
-        const node = treeSelectData[i];
-        if (node.id === id) {
-          // if the current node is the target node
-          // Set the target node to disabled
-          node.disabled = true;
-
-          // Traverse all child nodes and add disabled to all child nodes
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            for (let j = 0; j < children.length; j++) {
-              setDisable(children, children[j].id)
-            }
-          }
-        } else {
-          // If the current node is not the target node, go to its child nodes and look for it.
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            setDisable(children, id);
-          }
-        }
-      }
-    };
 
     //========================  Query ========================
     const blogQuery = () => {
@@ -210,30 +177,7 @@ export default defineComponent({
         if (data.success){
           blogs.value = data.content;
           record_blog.value = Tool.copy(blogs.value)
-          treeSelectData.value = Tool.copy(CategoryParentLevel.value);
-          setDisable(treeSelectData.value, route.query.blogId);
 
-          treeSelectData.value.unshift({id: 0, name: 'None'});
-
-
-        } else {
-          message.error(data.message)
-        }
-
-      });
-    };
-
-    const categoryQuery = () => {
-      axios.get("/category/all").then((response) => {
-
-        const data = response.data;
-        if (data.success){
-          categorys = data.content;
-          CategoryParentLevel.value = [];
-          CategoryParentLevel.value = Tool.array2Tree(categorys,0);
-          console.log("Tree：", CategoryParentLevel.value);
-
-          blogQuery()
         } else {
           message.error(data.message)
         }
@@ -242,7 +186,9 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      categoryQuery()
+      blogQuery()
+      treeSelectData.value = Tool.copy(CategoryParentLevel.value);
+      treeSelectData.value.unshift({id: 0, name: 'None'});
     });
 
     return {
