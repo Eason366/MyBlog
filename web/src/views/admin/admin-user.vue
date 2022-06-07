@@ -54,11 +54,11 @@
           @ok="edit_Submit"
       >
 
-        <a-form :model="record_user" layout="vertical" :rules="rules" ref="formRef">
+        <a-form :model="edit_user" layout="vertical" :rules="rules" ref="formRef">
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="User Name" name="loginName">
-                <a-input v-model:value="record_user.loginName"
+                <a-input v-model:value="edit_user.loginName"
                          placeholder="Please enter Your User Name"
                          :disabled="true"
                 />
@@ -69,7 +69,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Nick Name" name="name">
-                <a-input v-model:value="record_user.name" placeholder="Please enter Your NickName"/>
+                <a-input v-model:value="edit_user.name" placeholder="Please enter Your NickName"/>
               </a-form-item>
             </a-col>
           </a-row>
@@ -82,15 +82,15 @@
           v-model:visible="reset_visible"
           ok-text="Submit"
           cancel-text="Cancel"
-          @ok="edit_Submit"
+          @ok="reset_Submit"
       >
 
-        <a-form :model="record_user" layout="vertical" :rules="rules" ref="formRef">
+        <a-form :model="reset_user" layout="vertical" :rules="rules" ref="formRef">
 
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Password" name="password">
-                <a-input-password v-model:value="record_user.password"
+                <a-input-password v-model:value="reset_user.password"
                                   show-count :maxlength="20"
                                   placeholder="Please enter New Password"/>
               </a-form-item>
@@ -100,7 +100,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Password Confirm" name="confirm">
-                <a-input-password v-model:value="record_user.confirm"
+                <a-input-password v-model:value="reset_user.confirm"
                                   show-count :maxlength="20"
                                   placeholder="Please enter New Password again"/>
               </a-form-item>
@@ -124,9 +124,13 @@ import store from "@/store";
 declare let hexMd5: any;
 declare let KEY: any;
 
-interface FormState {
+interface edit_FormState {
   loginName: string;
   name: string;
+  id:number|undefined;
+}
+interface reset_FormState {
+
   password: string;
   confirm:string;
   id:number|undefined;
@@ -160,11 +164,14 @@ export default defineComponent({
     //========================  Rule  ========================
     const formRef = ref();
 
-    const record_user : UnwrapRef<FormState> = reactive({
+    const edit_user : UnwrapRef<edit_FormState> = reactive({
       loginName: '',
       name: '',
+      id:undefined,
+    });
+    const reset_user : UnwrapRef<reset_FormState> = reactive({
       password: '',
-      confirm:'',
+      confirm: '',
       id:undefined,
     });
 
@@ -186,7 +193,7 @@ export default defineComponent({
     }
 
     let confirmValidator = async(rule: RuleObject, value: string) => {
-      if (value !== record_user.password) {
+      if (value !== reset_user.password) {
         return Promise.reject("Two inputs don't match!");
       } else {
         return Promise.resolve();
@@ -251,34 +258,15 @@ export default defineComponent({
     };
 
 
-    //========================  Model  ========================
-    const edit_visible = ref<boolean>(false);
+    //========================  Reset Password  ========================
     const reset_visible = ref<boolean>(false);
-
-
-    const edit = (record:any) => {
-      console.log('record',record)
-      if (record.loginName==user.value.loginName){
-        record_user.loginName = record.loginName
-        record_user.name = record.name
-        record_user.id = record.id
-        record_user.password = record.password
-        record_user.confirm = record.password
-
-        edit_visible.value = true;
-      }else {
-        message.error("You do not have permission to edit")
-      }
-    };
 
     const reset = (record:any) => {
       console.log('record',record)
       if (record.loginName==user.value.loginName){
-        record_user.loginName = record.loginName
-        record_user.name = record.name
-        record_user.id = record.id
-        record_user.password = ''
-        record_user.confirm = ''
+        reset_user.id = record.id
+        reset_user.password = ''
+        reset_user.confirm = ''
 
         reset_visible.value = true;
       }else {
@@ -286,22 +274,18 @@ export default defineComponent({
       }
     };
 
-
-    const edit_Submit = () => {
+    const reset_Submit = () => {
       formRef.value
           .validate().then(() => {
-        console.log('record_user',record_user)
+        console.log('record_user',reset_user)
         const tempUser = ref({
-          id:record_user.id,
-          name:record_user.name,
-          loginName:record_user.loginName,
-          password:hexMd5(record_user.password + KEY),
+          id:reset_user.id,
+          password:hexMd5(reset_user.password + KEY),
         })
         axios.post("/user/save", tempUser.value).then((response) => {
           const data = response.data;
-          console.log(record_user)
+          console.log(reset_user)
           if (data.success) {
-            edit_visible.value = false;
             reset_visible.value = false;
 
             // reload
@@ -314,13 +298,57 @@ export default defineComponent({
           }
         });
       })
-          .catch((error: ValidateErrorEntity<FormState>) => {
+          .catch((error: ValidateErrorEntity<reset_FormState>) => {
             console.log('error', error);
           });
-
-
     };
-    
+
+    //========================  Edit Information  ========================
+    const edit_visible = ref<boolean>(false);
+
+    const edit = (record:any) => {
+      console.log('record',record)
+      if (record.loginName==user.value.loginName){
+        edit_user.loginName = record.loginName
+        edit_user.name = record.name
+        edit_user.id = record.id
+
+        edit_visible.value = true;
+      }else {
+        message.error("You do not have permission to edit")
+      }
+    };
+
+    const edit_Submit = () => {
+      formRef.value
+          .validate().then(() => {
+        console.log('record_user',edit_user)
+        const tempUser = ref({
+          id:edit_user.id,
+          name:edit_user.name,
+          loginName:edit_user.loginName,
+        })
+        axios.post("/user/save", tempUser.value).then((response) => {
+          const data = response.data;
+          console.log(edit_user)
+          if (data.success) {
+            edit_visible.value = false;
+
+            // reload
+            userQuery({
+              page:pagination.value.current,
+              size:pagination.value.pageSize,
+            })
+          }else {
+            message.error(data.message)
+          }
+        });
+      })
+          .catch((error: ValidateErrorEntity<edit_FormState>) => {
+            console.log('error', error);
+          });
+    };
+
     //========================  Query ========================
     const userQuery = (params: { page:number,size:number }) => {
       loading.value = true;
@@ -375,7 +403,6 @@ export default defineComponent({
 
     onMounted(() => {
       onSearch("")
-
     });
 
     return {
@@ -390,9 +417,11 @@ export default defineComponent({
       onSearch,
       onDelete,
       edit_Submit,
+      reset_Submit,
       edit,
       reset,
-      record_user,
+      reset_user,
+      edit_user,
     }
   }
 });
