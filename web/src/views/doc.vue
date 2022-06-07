@@ -64,6 +64,7 @@ export default defineComponent({
       axios.get("/blog/find-htmlContent/"+this.$route.query.blogId).then((response) => {
         const data = response.data;
         if (data.success){
+          this.docQuery()
           this.html=data.content
         } else {
           message.error(data.message)
@@ -90,7 +91,6 @@ export default defineComponent({
   },
   mounted() {
     this.$nextTick(function () {
-      this.docQuery()
       this.htmlContentQuery()
 
     })

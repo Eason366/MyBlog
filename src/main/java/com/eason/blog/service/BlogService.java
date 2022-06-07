@@ -5,6 +5,7 @@ import com.eason.blog.domain.BlogExample;
 import com.eason.blog.domain.Content;
 import com.eason.blog.mapper.BlogMapper;
 import com.eason.blog.mapper.ContentMapper;
+import com.eason.blog.mapper.MyDocMapper;
 import com.eason.blog.req.BlogQueryReq;
 import com.eason.blog.req.BlogSaveReq;
 import com.eason.blog.resp.BlogQueryResp;
@@ -30,6 +31,9 @@ public class BlogService {
 
     @Resource
     private BlogMapper blogMapper;
+
+    @Resource
+    private MyDocMapper myDocMapper;
 
     @Resource
     private BloguserService bloguserService;
@@ -128,6 +132,7 @@ public class BlogService {
 
     public String findhtmlContent(Long id){
         Content content = contentMapper.selectByPrimaryKey(id);
+        myDocMapper.increaseViewCount(id);
         if (ObjectUtils.isEmpty(content)) {
             return "";
         } else {

@@ -55,6 +55,9 @@ public class CategoryService {
 
     public void save(CategorySaveReq req){
         Category category = CopyUtil.copy(req,Category.class);
+        if (ObjectUtils.isEmpty(req.getParent())){
+         category.setParent(0L);
+        }
         if (ObjectUtils.isEmpty(req.getId())){
             // insert
             category.setId(snowFlake.nextId());
