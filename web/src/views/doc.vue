@@ -65,7 +65,6 @@ export default defineComponent({
         const data = response.data;
         if (data.success){
           this.html=data.content
-          console.log(this.html)
         } else {
           message.error(data.message)
         }
@@ -73,6 +72,7 @@ export default defineComponent({
     },
     docQuery (){
       axios.get("/blog/list/"+this.$route.query.blogId).then((response) => {
+        console.log("Eason",this.$route.query.blogId)
         const data = response.data;
         if (data.success){
           this.doc = {
