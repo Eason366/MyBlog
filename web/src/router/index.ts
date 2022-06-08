@@ -105,7 +105,6 @@ router.beforeEach((to, from, next) => {
     const loginUser = store.state.user;
     console.log('loginUser',loginUser)
     if (Tool.isEmpty(loginUser)) {
-      message.error("Login Please！")
       next();
     } else {
       console.log(loginUser.token)

@@ -142,7 +142,7 @@ export default defineComponent({
       }
     ];
 
-    const categorys = ref();
+    let categorys = computed(() => store.state.category);
     const CategoryParentLevel = computed(() => store.state.tree);
 
 
@@ -176,6 +176,7 @@ export default defineComponent({
     const onDelete = (id:number,loginName:string) => {
       if (loginName==user.value.loginName){
         ids = []
+        console.log(categorys)
         getDeleteIds(categorys.value, id);
         console.log(ids)
         axios.delete("/category/deleteIDs/"+ids.join(",")).then((response) => {
@@ -277,9 +278,8 @@ export default defineComponent({
 
         const data = response.data;
         if (data.success){
-          categorys.value = data.content;
+          store.commit("setCategory", data.content);
           store.commit("setTree", Tool.array2Tree(categorys.value,0));
-          console.log("Tree：", CategoryParentLevel.value);
           treeSelectData.value = Tool.copy(CategoryParentLevel.value) || [];
           treeSelectData.value.unshift({id: 0, name: 'None'});
           loading.value = false;
