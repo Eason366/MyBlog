@@ -139,4 +139,8 @@ public class BlogService {
             return content.getHtmlcontent();
         }
     }
+
+    public void vote(Long id) {
+        myDocMapper.increaseVoteCount(id);
+    }
 }

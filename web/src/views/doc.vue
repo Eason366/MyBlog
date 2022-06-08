@@ -20,10 +20,19 @@
         </a-space>
       </div>
 
+
       <a-divider style="height: 2px; background-color: #9999cc"/>
 
       <div class="editor" :innerHTML="html" style="margin: 0rem 2.60rem 0rem 2.60rem">
         <!--      {{html}}-->
+      </div>
+
+      <a-divider style="height: 2px; background-color: #9999cc"/>
+
+      <div class="vote-div">
+        <a-button type="primary" shape="round" :size="'large'" @click="vote">
+          <template #icon><LikeOutlined /> &nbsp;Like: {{doc.voteCount}} </template>
+        </a-button>
       </div>
     </a-layout-content>
   </a-layout>
@@ -86,6 +95,16 @@ export default defineComponent({
           message.error(data.message)
         }
 
+      });
+    },
+    vote () {
+      axios.get('/blog/vote/' + this.$route.query.blogId).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          this.doc.voteCount++
+        } else {
+          message.error(data.message);
+        }
       });
     },
   },
@@ -184,6 +203,9 @@ export default defineComponent({
 }
 .title span{
   font-size: 0.3rem;
+}
+.vote-div{
+  text-align: center;
 }
 
 </style>

@@ -65,4 +65,11 @@ public class BlogController {
         return resp;
     }
 
+    @GetMapping("/vote/{id}")
+    public CommonResp vote(@PathVariable Long id) {
+        CommonResp commonResp = new CommonResp();
+        blogService.vote(id);
+        return commonResp;
+    }
+
 }
