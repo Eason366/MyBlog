@@ -9,6 +9,7 @@ import AdminDoc from '../views/admin/admin-doc.vue'
 import AdminUser from '../views/admin/admin-user.vue'
 import Doc from '../views/doc.vue'
 import noFundPage from '../views/404.vue'
+import notAuthorized from '../views/403.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -58,6 +59,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/404',
     name: 'noFundPage',
     component: noFundPage,
+  },
+  {
+    path: '/403',
+    name: 'notAuthorized',
+    component: notAuthorized,
   }
 ]
 
@@ -81,8 +87,7 @@ router.beforeEach((to, from, next) => {
     const loginUser = store.state.user;
     console.log('loginUser',loginUser)
     if (Tool.isEmpty(loginUser)) {
-      message.error("Login Please！")
-      next('/');
+      next('/403');
     } else {
       console.log(loginUser.token)
       axios.get("/redis/get/"+loginUser.token).then((response) => {

@@ -3,7 +3,7 @@ create table `blog` (
   `id` bigint not null comment 'id',
   `name` varchar(50) comment 'name',
   `category` bigint comment 'category',
-  `description` varchar(200) default 'I just moved to San Francisco last week from London, so I can provide some perspective.' comment 'description',
+  `description` varchar(200) comment 'description',
   `cover` varchar(200) default 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' comment 'cover',
   `view_count` int not null default 0 comment 'view_count',
   `vote_count` int not null default 0 comment 'vote_count',
@@ -11,13 +11,6 @@ create table `blog` (
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 comment='blog';
 
-insert into `blog` (id, name,category,user) values (1, 'Spring Boot 入门教程',202,'test');
-insert into `blog` (id, name,category,user) values (2, 'Vue 入门教程',500,'test');
-insert into `blog` (id, name,category,user) values (3, 'Python 入门教程',300,'test');
-insert into `blog` (id, name,category,user) values (4, 'Mysql 入门教程',401,'test');
-insert into `blog` (id, name,category,user) values (5, 'Oracle 入门教程',500,'test');
-insert into `blog` (id, name,category,user) values (6, 'LeetCode001',201,'test');
-insert into `blog` (id, name,category,user) values (7, 'LeetCode123',201,'test');
 
 
 # 分类
