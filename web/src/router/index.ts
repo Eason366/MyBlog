@@ -3,7 +3,6 @@ import store from "@/store";
 import {Tool} from "@/util/tool";
 import axios from "axios";
 import {message} from "ant-design-vue";
-import About from '../views/About.vue'
 import AdminBlog from '../views/admin/admin-blog.vue'
 import AdminCategory from '../views/admin/admin-category.vue'
 import AdminDoc from '../views/admin/admin-doc.vue'
@@ -17,14 +16,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Home',
     component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: About
   },
   {
     path: '/admin/blog',
@@ -78,6 +69,11 @@ const router = createRouter({
 // 路由登录拦截
 router.beforeEach((to, from, next) => {
   // 要不要对meta.loginRequire属性做监控拦截
+
+  if (to.name == undefined){
+    next('/404');
+  }
+
   if (to.matched.some(function (item) {
     console.log(item, "是否需要登录校验：", item.meta.loginRequire);
     return item.meta.loginRequire

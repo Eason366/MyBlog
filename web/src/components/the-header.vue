@@ -1,6 +1,6 @@
 <template>
   <a-layout-header class="header" :style="{height:'0.64rem', position: 'fixed', zIndex: 1, width: '100%'}">
-    <div class="logo" :style="{}"> Eason's Blog </div>
+    <div class="logo" :style="{}"> Blog </div>
 
     <a class="login-sign" v-show="!user.id" @click="showLoginModal">
       <span>Login</span>
@@ -33,9 +33,6 @@
     >
       <a-menu-item key="/">
         <router-link to="/">Home</router-link>
-      </a-menu-item>
-      <a-menu-item key="/about">
-        <router-link to="/about">About</router-link>
       </a-menu-item>
       <a-menu-item key="/admin/user" :style="user.id? {} : {display:'none'}">
         <router-link to="/admin/user">Admin User</router-link>
