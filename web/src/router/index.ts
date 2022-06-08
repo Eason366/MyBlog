@@ -8,6 +8,8 @@ import AdminBlog from '../views/admin/admin-blog.vue'
 import AdminCategory from '../views/admin/admin-category.vue'
 import AdminDoc from '../views/admin/admin-doc.vue'
 import AdminUser from '../views/admin/admin-user.vue'
+import Doc from '../views/doc.vue'
+import noFundPage from '../views/404.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -43,7 +45,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin/doc',
     name: '',
-    component: () => AdminDoc,
+    component: AdminDoc,
     meta: {
       loginRequire: true
     }
@@ -51,7 +53,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/doc',
     name: 'Doc',
-    component: () => import(/* webpackChunkName: "about" */ '../views/doc.vue')
+    component: Doc
   },
   {
     path: '/admin/user',
@@ -60,6 +62,11 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       loginRequire: true
     }
+  },
+  {
+    path: '/404',
+    name: 'noFundPage',
+    component: noFundPage,
   }
 ]
 
