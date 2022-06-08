@@ -3,6 +3,8 @@ package com.eason.blog.service;
 import com.eason.blog.domain.Blog;
 import com.eason.blog.domain.BlogExample;
 import com.eason.blog.domain.Content;
+import com.eason.blog.exception.BusinessException;
+import com.eason.blog.exception.BusinessExceptionCode;
 import com.eason.blog.mapper.BlogMapper;
 import com.eason.blog.mapper.ContentMapper;
 import com.eason.blog.mapper.MyDocMapper;
@@ -11,6 +13,8 @@ import com.eason.blog.req.BlogSaveReq;
 import com.eason.blog.resp.BlogQueryResp;
 import com.eason.blog.resp.PageResp;
 import com.eason.blog.util.CopyUtil;
+import com.eason.blog.util.RedisUtil;
+import com.eason.blog.util.RequestContext;
 import com.eason.blog.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -40,6 +44,9 @@ public class BlogService {
 
     @Resource
     private ContentMapper contentMapper;
+
+    @Resource
+    public RedisUtil redisUtil;
 
     @Resource
     private SnowFlake snowFlake;
@@ -141,6 +148,13 @@ public class BlogService {
     }
 
     public void vote(Long id) {
-        myDocMapper.increaseVoteCount(id);
+//        myDocMapper.increaseVoteCount(id);
+//        No repeat voting within 24 hours
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 3600 * 24)) {
+            myDocMapper.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 }
