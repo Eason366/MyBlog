@@ -262,7 +262,6 @@ export default defineComponent({
     const reset_visible = ref<boolean>(false);
 
     const reset = (record:any) => {
-      console.log('record',record)
       if (record.loginName==user.value.loginName){
         reset_user.id = record.id
         reset_user.password = ''
@@ -277,14 +276,12 @@ export default defineComponent({
     const reset_Submit = () => {
       formRef.value
           .validate().then(() => {
-        console.log('record_user',reset_user)
         const tempUser = ref({
           id:reset_user.id,
           password:hexMd5(reset_user.password + KEY),
         })
         axios.post("/user/save", tempUser.value).then((response) => {
           const data = response.data;
-          console.log(reset_user)
           if (data.success) {
             reset_visible.value = false;
 
@@ -299,7 +296,6 @@ export default defineComponent({
         });
       })
           .catch((error: ValidateErrorEntity<reset_FormState>) => {
-            console.log('error', error);
           });
     };
 
@@ -307,7 +303,6 @@ export default defineComponent({
     const edit_visible = ref<boolean>(false);
 
     const edit = (record:any) => {
-      console.log('record',record)
       if (record.loginName==user.value.loginName){
         edit_user.loginName = record.loginName
         edit_user.name = record.name
@@ -322,7 +317,6 @@ export default defineComponent({
     const edit_Submit = () => {
       formRef.value
           .validate().then(() => {
-        console.log('record_user',edit_user)
         const tempUser = ref({
           id:edit_user.id,
           name:edit_user.name,
@@ -330,7 +324,6 @@ export default defineComponent({
         })
         axios.post("/user/save", tempUser.value).then((response) => {
           const data = response.data;
-          console.log(edit_user)
           if (data.success) {
             edit_visible.value = false;
 
@@ -352,7 +345,6 @@ export default defineComponent({
     //========================  Query ========================
     const userQuery = (params: { page:number,size:number }) => {
       loading.value = true;
-      console.log(params)
       axios.get("/user/list", {
         params: {
           page:pagination.value.current,
@@ -361,10 +353,8 @@ export default defineComponent({
       }).then((response) => {
 
         const data = response.data;
-        console.log('data',data)
         if (data.success){
           users.value = data.content.list;
-          console.log(users)
           loading.value = false;
           // reload pagination
           pagination.value.current = params.page;

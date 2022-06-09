@@ -83,7 +83,6 @@ export default defineComponent({
     LikeOutlined,
   },
   setup() {
-    console.log("setup");
     const blogs = ref()
     const pageSize = 10
     let categorys: any;
@@ -128,7 +127,6 @@ export default defineComponent({
 
     const selectedKeys = ref<string[]>([]);
     watch(selectedKeys, () => {
-      console.log('selectedKeys', selectedKeys.value);
       categories = [];
       getAllCategories(categorys,selectedKeys.value[0]);
       axios.get("/blog/list", {
@@ -140,7 +138,6 @@ export default defineComponent({
       }).then((response) => {
 
         const data = response.data;
-        console.log(data)
         if (data.success){
           blogs.value = data.content.list;
           // reload pagination
@@ -163,7 +160,6 @@ export default defineComponent({
       }).then((response) => {
 
         const data = response.data;
-        console.log(data)
         if (data.success){
           blogs.value = data.content.list;
           // reload pagination
@@ -202,7 +198,6 @@ export default defineComponent({
           store.commit("setCategory", categorys);
           CategoryParentLevel.value = [];
           CategoryParentLevel.value = Tool.array2Tree(categorys,0);
-          console.log("Tree：", CategoryParentLevel.value);
           store.commit("setTree", CategoryParentLevel.value);
 
 

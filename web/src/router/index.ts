@@ -81,21 +81,17 @@ router.beforeEach((to, from, next) => {
   }
 
   if (to.matched.some(function (item) {
-    console.log(item, "是否需要登录校验：", item.meta.loginRequire);
     return item.meta.loginRequire
   })) {
     const loginUser = store.state.user;
-    console.log('loginUser',loginUser)
     if (Tool.isEmpty(loginUser)) {
       next('/403');
     } else {
-      console.log(loginUser.token)
       axios.get("/redis/get/"+loginUser.token).then((response) => {
         if (response.data){
           next();
         }else {
           message.error("Login expired, please login again")
-          console.log("Logout begin");
           axios.get('/user/logout/' + loginUser.token).then((response) => {
             const data = response.data;
             if (data.success) {
@@ -111,17 +107,14 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     const loginUser = store.state.user;
-    console.log('loginUser',loginUser)
     if (Tool.isEmpty(loginUser)) {
       next();
     } else {
-      console.log(loginUser.token)
       axios.get("/redis/get/"+loginUser.token).then((response) => {
         if (response.data){
           next();
         }else {
           message.error("Login expired, please login again")
-          console.log("Logout begin");
           axios.get('/user/logout/' + loginUser.token).then((response) => {
             const data = response.data;
             if (data.success) {

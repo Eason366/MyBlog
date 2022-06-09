@@ -82,7 +82,6 @@ export default defineComponent({
     },
     docQuery (){
       axios.get("/blog/list/"+this.$route.query.blogId).then((response) => {
-        console.log("Eason",this.$route.query.blogId)
         const data = response.data;
         if (data.success){
           this.doc = {
@@ -115,11 +114,6 @@ export default defineComponent({
     })
   },
   setup() {
-    const route = useRoute();
-    onMounted(() => {
-      console.log(route.query)
-
-    });
 
     return {
       EyeOutlined,

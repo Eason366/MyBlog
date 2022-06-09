@@ -19,22 +19,17 @@ axios.defaults.baseURL = process.env.VUE_APP_API_HOST;
  * axios interceptor
  */
 axios.interceptors.request.use(function (config) {
-    console.log('Parameters：', config);
     const token = store.state.user.token;
     if (Tool.isNotEmpty(token)) {
         config.headers.token = token;
-        console.log("请求headers增加token:", token);
     }
     return config;
 }, error => {
-    console.log('Error：', error);
     return Promise.reject(error);
 });
 axios.interceptors.response.use(function (response) {
-    console.log('Result：', response);
     return response;
 }, error => {
-    console.log('Error：', error);
     return Promise.reject(error);
 });
 

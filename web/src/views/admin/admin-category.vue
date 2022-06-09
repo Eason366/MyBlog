@@ -154,7 +154,6 @@ export default defineComponent({
       for (let i = 0; i < treeSelectData.length; i++) {
         const node = treeSelectData[i];
         if (node.id === id) {
-          console.log("delete", node);
           ids.push(id);
 
           const children = node.children;
@@ -176,9 +175,7 @@ export default defineComponent({
     const onDelete = (id:number,loginName:string) => {
       if (loginName==user.value.loginName){
         ids = []
-        console.log(categorys)
         getDeleteIds(categorys.value, id);
-        console.log(ids)
         axios.delete("/category/deleteIDs/"+ids.join(",")).then((response) => {
           const data = response.data;
           if (data.success) {
@@ -244,13 +241,11 @@ export default defineComponent({
      * Set a node and its descendants to disabled
      */
     const setDisable = (treeSelectData: any, id: any) => {
-      // console.log(treeSelectData, id);
       // Traverse the array, that is, traverse a layer of nodes
       for (let i = 0; i < treeSelectData.length; i++) {
         const node = treeSelectData[i];
         if (node.id === id) {
           // if the current node is the target node
-          console.log("disabled", node);
           // Set the target node to disabled
           node.disabled = true;
 

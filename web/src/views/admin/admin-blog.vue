@@ -251,7 +251,6 @@ export default defineComponent({
       record_blog.value.htmlcontent = ''
       axios.post("/blog/save", record_blog.value).then((response) => {
         const data = response.data;
-        console.log(record_blog.value)
         if (data.success) {
           add_visible.value = false;
 

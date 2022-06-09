@@ -173,7 +173,6 @@ export default defineComponent({
         newUser.password= hexMd5(newUser.password + KEY);
         axios.post("/user/save", newUser).then((response) => {
           const data = response.data;
-          console.log(newUser)
           if (data.success) {
             signModalVisible.value = false;
 
@@ -208,7 +207,6 @@ export default defineComponent({
         password:hexMd5(loginUser.value.password + KEY),
         loginName:loginUser.value.loginName,
       })
-      console.log(loginUser.value)
       axios.post('/user/Login', tempUser.value).then((response) => {
         loginModalLoading.value = false;
         const data = response.data;
@@ -227,7 +225,6 @@ export default defineComponent({
 
     //========================  Logout  ========================
     const logout = () => {
-      console.log("Logout begin");
       axios.get('/user/logout/' + user.value.token).then((response) => {
         const data = response.data;
         if (data.success) {
